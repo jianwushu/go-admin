@@ -23,5 +23,10 @@ export default {
     goVersion: 'Go Version',
     vueVersion: 'Vue Version',
     viewDetails: 'View Details',
+    framework: 'Framework',
+    database: 'Database',
+    cache: 'Cache',
+    os: 'Operating System',
+    arch: 'Architecture',
   },
 }

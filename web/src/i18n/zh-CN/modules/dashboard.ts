@@ -23,5 +23,10 @@ export default {
     goVersion: 'Go 版本',
     vueVersion: 'Vue 版本',
     viewDetails: '查看详情',
+    framework: '框架',
+    database: '数据库',
+    cache: '缓存',
+    os: '操作系统',
+    arch: '系统架构',
   },
 }

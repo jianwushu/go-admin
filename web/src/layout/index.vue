@@ -96,7 +96,7 @@ function handleCloseSidebar() {
   top: 0;
   z-index: 9;
   background: var(--el-bg-color);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 

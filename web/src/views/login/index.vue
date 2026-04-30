@@ -149,14 +149,14 @@ async function handleLogin() {
   justify-content: center;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 50%, #e0e7ff 100%);
   position: relative;
   overflow: hidden;
   transition: background 0.3s ease;
 }
 
 html.dark .login-container {
-  background: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
+  background: linear-gradient(135deg, #0c1929 0%, #0f172a 50%, #1e1b4b 100%);
 }
 
 /* 背景装饰圆 */
@@ -203,15 +203,15 @@ html.dark .login-bg-circle {
   padding: 40px;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10px);
   z-index: 1;
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 html.dark .login-card {
-  background: rgba(30, 30, 46, 0.95);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  background: rgba(31, 31, 31, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* 头部 */
@@ -223,24 +223,24 @@ html.dark .login-card {
 .login-title {
   font-size: 32px;
   font-weight: 700;
-  color: #303133;
+  color: #1f1f1f;
   margin-bottom: 8px;
   letter-spacing: 2px;
   transition: color 0.3s ease;
 }
 
 html.dark .login-title {
-  color: #e2e8f0;
+  color: #ffffffd9;
 }
 
 .login-subtitle {
   font-size: 14px;
-  color: #909399;
+  color: #8c8c8c;
   transition: color 0.3s ease;
 }
 
 html.dark .login-subtitle {
-  color: #94a3b8;
+  color: #ffffffa6;
 }
 
 /* 表单 */

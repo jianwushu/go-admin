@@ -1,8 +1,8 @@
 <template>
-  <div class="server-monitor p-4 md:p-6">
+  <div class="p-4">
     <!-- 页面标题和操作栏 -->
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+    <div class="mb-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold" style="color: var(--el-text-color-primary)">
         {{ t('monitor.title') }}
       </h1>
       <div class="flex items-center gap-3">
@@ -19,23 +19,25 @@
 
     <!-- 加载状态 -->
     <div v-if="loading && !serverInfo" class="flex h-64 items-center justify-center">
-      <el-icon class="is-loading" :size="40" color="#409eff">
+      <el-icon class="is-loading" :size="40" color="#4096ff">
         <Loading />
       </el-icon>
     </div>
 
     <template v-else-if="serverInfo">
       <!-- 第一行：CPU + 内存 -->
-      <div class="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <!-- CPU 信息 -->
-        <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-          <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
-            <el-icon class="text-blue-500"><Cpu /></el-icon>
-            {{ t('monitor.cpu') }}
-          </h2>
+        <el-card shadow="never">
+          <template #header>
+            <div class="card-header">
+              <el-icon class="text-blue-500"><Cpu /></el-icon>
+              <span>{{ t('monitor.cpu') }}</span>
+            </div>
+          </template>
           <div class="mb-4 flex items-center justify-between">
             <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.cpuCores') }}</span>
-            <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.cpu.cores }}</span>
+            <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.cpu.cores }}</span>
           </div>
           <div class="mb-4 flex items-center justify-between">
             <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.cpuUsage') }}</span>
@@ -56,7 +58,8 @@
               <div
                 v-for="(usage, index) in serverInfo.cpu.usage"
                 :key="index"
-                class="rounded bg-gray-50 p-2 text-center dark:bg-gray-700"
+                class="rounded p-2 text-center"
+                style="background: var(--el-fill-color-light)"
               >
                 <div class="text-xs text-gray-500 dark:text-gray-400">Core {{ index }}</div>
                 <div class="text-sm font-medium" :class="getUsageColor(usage)">
@@ -65,18 +68,20 @@
               </div>
             </div>
           </div>
-        </div>
+        </el-card>
 
         <!-- 内存信息 -->
-        <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-          <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
-            <el-icon class="text-green-500"><Coin /></el-icon>
-            {{ t('monitor.memory') }}
-          </h2>
+        <el-card shadow="never">
+          <template #header>
+            <div class="card-header">
+              <el-icon class="text-green-500"><Coin /></el-icon>
+              <span>{{ t('monitor.memory') }}</span>
+            </div>
+          </template>
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.memoryTotal') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ formatMB(serverInfo.memory.total) }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ formatMB(serverInfo.memory.total) }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.memoryUsed') }}</span>
@@ -86,7 +91,7 @@
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.memoryFree') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ formatMB(serverInfo.memory.free) }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ formatMB(serverInfo.memory.free) }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.memoryUsage') }}</span>
@@ -102,15 +107,17 @@
             :stroke-width="20"
             :text-inside="true"
           />
-        </div>
+        </el-card>
       </div>
 
       <!-- 第二行：磁盘信息 -->
-      <div class="mb-6 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-        <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
-          <el-icon class="text-orange-500"><Box /></el-icon>
-          {{ t('monitor.disk') }}
-        </h2>
+      <el-card shadow="never" class="mb-4">
+        <template #header>
+          <div class="card-header">
+            <el-icon class="text-orange-500"><Box /></el-icon>
+            <span>{{ t('monitor.disk') }}</span>
+          </div>
+        </template>
         <el-table :data="serverInfo.disk" stripe>
           <el-table-column :label="t('monitor.diskMountPoint')" prop="mountPoint" min-width="120" />
           <el-table-column :label="t('monitor.diskTotal')" min-width="100">
@@ -135,70 +142,74 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
+      </el-card>
 
       <!-- 第三行：Go 运行时 + 服务状态 -->
-      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <!-- Go 运行时信息 -->
-        <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800 lg:col-span-2">
-          <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
-            <el-icon class="text-cyan-500"><Monitor /></el-icon>
-            {{ t('monitor.goRuntime') }}
-          </h2>
+        <el-card shadow="never" class="lg:col-span-2">
+          <template #header>
+            <div class="card-header">
+              <el-icon class="text-cyan-500"><Monitor /></el-icon>
+              <span>{{ t('monitor.goRuntime') }}</span>
+            </div>
+          </template>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.goVersion') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.goVersion }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.goVersion }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.os') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.os }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.os }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.arch') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.arch }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.arch }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.goroutines') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.goroutines }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.goroutines }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.heapAlloc') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.heapAlloc }} {{ t('monitor.unitMB') }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.heapAlloc }} {{ t('monitor.unitMB') }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.heapSys') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.heapSys }} {{ t('monitor.unitMB') }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.heapSys }} {{ t('monitor.unitMB') }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.heapIdle') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.heapIdle }} {{ t('monitor.unitMB') }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.heapIdle }} {{ t('monitor.unitMB') }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.heapInuse') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.heapInuse }} {{ t('monitor.unitMB') }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.heapInuse }} {{ t('monitor.unitMB') }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.numGC') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.numGC }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.numGC }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">{{ t('monitor.lastGC') }}</span>
-              <span class="font-medium text-gray-900 dark:text-white">{{ serverInfo.goRuntime.lastGC }}</span>
+              <span class="font-medium" style="color: var(--el-text-color-primary)">{{ serverInfo.goRuntime.lastGC }}</span>
             </div>
           </div>
-        </div>
+        </el-card>
 
         <!-- 服务状态 -->
-        <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-          <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-            {{ t('monitor.serviceStatus') }}
-          </h2>
+        <el-card shadow="never">
+          <template #header>
+            <div class="card-header">
+              <span>{{ t('monitor.serviceStatus') }}</span>
+            </div>
+          </template>
           <div class="space-y-4">
             <!-- 数据库状态 -->
-            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+            <div class="rounded-lg p-4" style="border: 1px solid var(--el-border-color-light)">
               <div class="mb-2 flex items-center justify-between">
-                <span class="font-medium text-gray-900 dark:text-white">{{ t('monitor.db') }}</span>
+                <span class="font-medium" style="color: var(--el-text-color-primary)">{{ t('monitor.db') }}</span>
                 <el-tag :type="serverInfo.db.status === 'online' ? 'success' : 'danger'" size="small">
                   {{ serverInfo.db.status === 'online' ? t('monitor.online') : t('monitor.offline') }}
                 </el-tag>
@@ -206,9 +217,9 @@
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ serverInfo.db.message }}</p>
             </div>
             <!-- Redis 状态 -->
-            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+            <div class="rounded-lg p-4" style="border: 1px solid var(--el-border-color-light)">
               <div class="mb-2 flex items-center justify-between">
-                <span class="font-medium text-gray-900 dark:text-white">{{ t('monitor.redis') }}</span>
+                <span class="font-medium" style="color: var(--el-text-color-primary)">{{ t('monitor.redis') }}</span>
                 <el-tag :type="serverInfo.redis.status === 'online' ? 'success' : 'danger'" size="small">
                   {{ serverInfo.redis.status === 'online' ? t('monitor.online') : t('monitor.offline') }}
                 </el-tag>
@@ -216,7 +227,7 @@
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ serverInfo.redis.message }}</p>
             </div>
           </div>
-        </div>
+        </el-card>
       </div>
     </template>
   </div>
@@ -303,3 +314,14 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+
+<style scoped>
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+</style>

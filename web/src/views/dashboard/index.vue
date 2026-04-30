@@ -1,161 +1,128 @@
 <template>
   <div class="dashboard-container">
-    <!-- 欢迎信息 -->
-    <el-card
-      :body-style="{ padding: '32px 40px' }"
-      class="welcome-card mb-8"
-      shadow="never"
-    >
+    <!-- 欢迎横幅 -->
+    <div class="welcome-banner">
       <div class="welcome-content">
         <div class="welcome-text">
           <h1 class="welcome-title">{{ t('dashboard.welcome') }}</h1>
           <p class="welcome-desc">{{ t('dashboard.welcomeDesc') }}</p>
         </div>
         <div class="welcome-time">
-          <el-text type="info" size="large">{{ currentTime }}</el-text>
+          <el-text size="large" class="welcome-time-text">{{ currentTime }}</el-text>
         </div>
       </div>
-    </el-card>
+    </div>
 
     <!-- 统计卡片 -->
-    <el-row :gutter="20" class="mb-8">
-      <el-col
+    <div class="stat-grid section-spacing">
+      <div
         v-for="item in statCards"
         :key="item.key"
-        :xs="12"
-        :sm="12"
-        :md="8"
-        :lg="4"
-        :xl="4"
-        class="mb-4 lg:mb-0"
+        class="stat-item"
       >
-        <el-card
-          shadow="hover"
-          class="stat-card"
-          :body-style="{ padding: '24px' }"
-        >
-          <div class="stat-card-inner">
-            <el-statistic :value="stats[item.key] ?? 0">
-              <template #title>
-                <div class="stat-title">
-                  <el-icon :size="16" :color="item.color">
-                    <component :is="item.icon" />
-                  </el-icon>
-                  <span>{{ t(`dashboard.${item.key}`) }}</span>
-                </div>
-              </template>
-            </el-statistic>
-          </div>
-          <div class="stat-footer" :style="{ background: item.bgColor }">
-            <el-text size="small" :style="{ color: item.color }">
-              {{ t('dashboard.viewDetails') }}
-            </el-text>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+        <div class="stat-item-inner">
+          <el-statistic :value="stats[item.key] ?? 0">
+            <template #title>
+              <div class="stat-title">
+                <el-icon :size="16" :color="item.color">
+                  <component :is="item.icon" />
+                </el-icon>
+                <span>{{ t(`dashboard.${item.key}`) }}</span>
+              </div>
+            </template>
+          </el-statistic>
+        </div>
+      </div>
+    </div>
 
     <!-- 中间区域：快捷入口 + 最近活动 -->
-    <el-row :gutter="20" class="mb-8">
-      <el-col :xs="24" :lg="12" class="mb-4 lg:mb-0">
-        <el-card shadow="never" class="h-full">
-          <template #header>
-            <div class="card-header">
-              <el-icon :size="18"><Grid /></el-icon>
-              <span>{{ t('dashboard.quickEntry') }}</span>
-            </div>
-          </template>
-          <el-row :gutter="16">
-            <el-col
-              v-for="entry in quickEntries"
-              :key="entry.path"
-              :span="8"
-              class="mb-4"
+    <div class="content-grid section-spacing">
+      <!-- 快捷入口 -->
+      <div class="content-section">
+        <div class="section-header">
+          <el-icon :size="18"><Grid /></el-icon>
+          <span>{{ t('dashboard.quickEntry') }}</span>
+        </div>
+        <div class="entry-grid">
+          <router-link
+            v-for="entry in quickEntries"
+            :key="entry.path"
+            :to="entry.path"
+            class="quick-entry-item"
+          >
+            <div
+              class="quick-entry-icon"
+              :style="{ background: entry.bgColor }"
             >
-              <router-link :to="entry.path" class="quick-entry-item">
-                <div
-                  class="quick-entry-icon"
-                  :style="{ background: entry.bgColor }"
-                >
-                  <el-icon :size="28" :color="entry.iconColor">
-                    <component :is="entry.icon" />
-                  </el-icon>
-                </div>
-                <span class="quick-entry-label">
-                  {{ t(`dashboard.${entry.label}`) }}
-                </span>
-              </router-link>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
+              <el-icon :size="28" :color="entry.iconColor">
+                <component :is="entry.icon" />
+              </el-icon>
+            </div>
+            <span class="quick-entry-label">
+              {{ t(`dashboard.${entry.label}`) }}
+            </span>
+          </router-link>
+        </div>
+      </div>
 
-      <el-col :xs="24" :lg="12">
-        <el-card shadow="never" class="h-full">
-          <template #header>
-            <div class="card-header">
-              <el-icon :size="18"><Clock /></el-icon>
-              <span>{{ t('dashboard.recentActivity') }}</span>
-            </div>
-          </template>
-          <el-empty
-            v-if="recentActivities.length === 0"
-            :description="t('dashboard.noActivity')"
-            :image-size="80"
-          />
-          <el-timeline v-else>
-            <el-timeline-item
-              v-for="activity in recentActivities"
-              :key="activity.id"
-              :timestamp="activity.time"
-              placement="top"
-              :color="activity.color"
-            >
-              <el-text>{{ activity.content }}</el-text>
-            </el-timeline-item>
-          </el-timeline>
-        </el-card>
-      </el-col>
-    </el-row>
+      <!-- 最近活动 -->
+      <div class="content-section">
+        <div class="section-header">
+          <el-icon :size="18"><Clock /></el-icon>
+          <span>{{ t('dashboard.recentActivity') }}</span>
+        </div>
+        <el-empty
+          v-if="recentActivities.length === 0"
+          :description="t('dashboard.noActivity')"
+          :image-size="80"
+        />
+        <el-timeline v-else>
+          <el-timeline-item
+            v-for="activity in recentActivities"
+            :key="activity.id"
+            :timestamp="activity.time"
+            placement="top"
+            :color="activity.color"
+          >
+            <el-text>{{ activity.content }}</el-text>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+    </div>
 
     <!-- 底部区域：系统信息 -->
-    <el-row :gutter="20">
-      <el-col :span="24">
-        <el-card shadow="never">
-          <template #header>
-            <div class="card-header">
-              <el-icon :size="18"><InfoFilled /></el-icon>
-              <span>{{ t('dashboard.systemInfo') }}</span>
+    <el-card shadow="never">
+      <template #header>
+        <div class="card-header">
+          <el-icon :size="18"><InfoFilled /></el-icon>
+          <span>{{ t('dashboard.systemInfo') }}</span>
+        </div>
+      </template>
+      <el-descriptions :column="2" border>
+        <el-descriptions-item
+          v-for="info in systemInfoItems"
+          :key="info.label"
+          :label="t(`dashboard.${info.label}`)"
+          :width="200"
+        >
+          <template #label>
+            <div class="desc-label">
+              <el-icon :size="14"><component :is="info.icon" /></el-icon>
+              <span>{{ t(`dashboard.${info.label}`) }}</span>
             </div>
           </template>
-          <el-descriptions :column="2" border>
-            <el-descriptions-item
-              v-for="info in systemInfoItems"
-              :key="info.label"
-              :label="t(`dashboard.${info.label}`)"
-              :width="200"
-            >
-              <template #label>
-                <div class="desc-label">
-                  <el-icon :size="14"><component :is="info.icon" /></el-icon>
-                  <span>{{ t(`dashboard.${info.label}`) }}</span>
-                </div>
-              </template>
-              <el-tag :type="info.tagType" effect="plain" size="small">
-                {{ info.value }}
-              </el-tag>
-            </el-descriptions-item>
-          </el-descriptions>
-        </el-card>
-      </el-col>
-    </el-row>
+          <el-tag :type="info.tagType" effect="plain" size="small">
+            {{ info.value }}
+          </el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from '@/store/modules/app'
 import {
   User,
   UserFilled,
@@ -176,7 +143,6 @@ import { getDashboardStats, type DashboardStats } from '@/api/dashboard'
 defineOptions({ name: 'Dashboard' })
 
 const { t, locale } = useI18n()
-const appStore = useAppStore()
 
 // 当前时间
 const currentTime = ref('')
@@ -200,138 +166,148 @@ const stats = ref<DashboardStats>({
   roleCount: 0,
   menuCount: 0,
   deptCount: 0,
-  todayLogin: 0,
+  todayLogin:0
 })
 
 // 统计卡片配置
 const statCards = [
   {
-    key: 'userCount' as const,
+    key: 'userCount',
     icon: markRaw(User),
-    color: '#3b82f6',
-    bgColor: 'rgba(59, 130, 246, 0.08)',
+    color: '#4096ff',
+    bgColor: 'rgba(64, 150, 255, 0.06)',
   },
   {
-    key: 'roleCount' as const,
+    key: 'roleCount',
     icon: markRaw(UserFilled),
-    color: '#22c55e',
-    bgColor: 'rgba(34, 197, 94, 0.08)',
+    color: '#52c41a',
+    bgColor: 'rgba(82, 196, 26, 0.06)',
   },
   {
-    key: 'menuCount' as const,
+    key: 'menuCount',
     icon: markRaw(Menu),
-    color: '#f59e0b',
-    bgColor: 'rgba(245, 158, 11, 0.08)',
+    color: '#faad14',
+    bgColor: 'rgba(250, 173, 20, 0.06)',
   },
   {
-    key: 'deptCount' as const,
+    key: 'deptCount',
     icon: markRaw(OfficeBuilding),
-    color: '#64748b',
-    bgColor: 'rgba(100, 116, 139, 0.08)',
+    color: '#ff4d4f',
+    bgColor: 'rgba(255, 77, 79, 0.06)',
   },
   {
-    key: 'todayLogin' as const,
+    key: 'todayLogin',
     icon: markRaw(Connection),
-    color: '#ef4444',
-    bgColor: 'rgba(239, 68, 68, 0.08)',
+    color: '#722ed1',
+    bgColor: 'rgba(114, 46, 209, 0.06)',
   },
-]
+] as const
 
-// 快捷入口配置
+// 快捷入口
 const quickEntries = [
   {
     path: '/system/user',
-    label: 'userManagement',
     icon: markRaw(User),
-    bgColor: 'rgba(59, 130, 246, 0.1)',
-    iconColor: '#3b82f6',
+    label: 'userManagement',
+    iconColor: '#4096ff',
+    bgColor: 'rgba(64, 150, 255, 0.08)',
   },
   {
     path: '/system/role',
-    label: 'roleManagement',
     icon: markRaw(UserFilled),
-    bgColor: 'rgba(34, 197, 94, 0.1)',
-    iconColor: '#22c55e',
+    label: 'roleManagement',
+    iconColor: '#52c41a',
+    bgColor: 'rgba(82, 196, 26, 0.08)',
   },
   {
     path: '/system/menu',
-    label: 'menuManagement',
     icon: markRaw(Menu),
-    bgColor: 'rgba(245, 158, 11, 0.1)',
-    iconColor: '#f59e0b',
+    label: 'menuManagement',
+    iconColor: '#faad14',
+    bgColor: 'rgba(250, 173, 20, 0.08)',
   },
   {
     path: '/system/dept',
-    label: 'deptManagement',
     icon: markRaw(OfficeBuilding),
-    bgColor: 'rgba(100, 116, 139, 0.1)',
-    iconColor: '#64748b',
+    label: 'deptManagement',
+    iconColor: '#ff4d4f',
+    bgColor: 'rgba(255, 77, 79, 0.08)',
   },
   {
     path: '/monitor/server',
+    icon: markRaw(Cpu),
     label: 'systemMonitor',
-    icon: markRaw(Monitor),
-    bgColor: 'rgba(239, 68, 68, 0.1)',
-    iconColor: '#ef4444',
+    iconColor: '#13c2c2',
+    bgColor: 'rgba(19, 194, 194, 0.08)',
   },
   {
     path: '/codegen',
+    icon: markRaw(Platform),
     label: 'codeGenerator',
-    icon: markRaw(Setting),
-    bgColor: 'rgba(139, 92, 246, 0.1)',
-    iconColor: '#8b5cf6',
+    iconColor: '#722ed1',
+    bgColor: 'rgba(114, 46, 209, 0.08)',
   },
 ]
 
 // 最近活动
-const recentActivities = ref<
-  Array<{ id: number; content: string; time: string; color: string }>
->([])
+const recentActivities = ref([
+  {
+    id: 1,
+    content: '用户 admin 登录了系统',
+    time: '2024-01-15 10:30:00',
+    color: '#4096ff',
+  },
+  {
+    id: 2,
+    content: '角色 管理员 被修改',
+    time: '2024-01-15 09:15:00',
+    color: '#faad14',
+  },
+  {
+    id: 3,
+    content: '新用户 testuser 被创建',
+    time: '2024-01-14 16:45:00',
+    color: '#52c41a',
+  },
+  {
+    id: 4,
+    content: '菜单 系统管理 被更新',
+    time: '2024-01-14 14:20:00',
+    color: '#13c2c2',
+  },
+])
 
 // 系统信息
-const systemInfoItems = [
-  {
-    label: 'systemName',
-    value: 'Go-Admin',
-    icon: markRaw(Platform),
-    tagType: 'primary' as const,
-  },
-  {
-    label: 'systemVersion',
-    value: 'v1.0.0',
-    icon: markRaw(Document),
-    tagType: 'success' as const,
-  },
-  {
-    label: 'goVersion',
-    value: 'Go 1.21+',
-    icon: markRaw(Cpu),
-    tagType: 'info' as const,
-  },
-  {
-    label: 'vueVersion',
-    value: 'Vue 3.4+',
-    icon: markRaw(Monitor),
-    tagType: 'warning' as const,
-  },
+const systemInfoItems: Array<{
+  label: string
+  icon: ReturnType<typeof markRaw>
+  value: string
+  tagType: 'success' | 'primary' | 'warning' | 'danger' | 'info'
+}> = [
+  { label: 'goVersion', icon: markRaw(Document), value: 'Go 1.21', tagType: 'success' },
+  { label: 'framework', icon: markRaw(Setting), value: 'Gin', tagType: 'primary' },
+  { label: 'database', icon: markRaw(Monitor), value: 'MySQL 8.0', tagType: 'warning' },
+  { label: 'cache', icon: markRaw(Connection), value: 'Redis 7.0', tagType: 'danger' },
+  { label: 'os', icon: markRaw(Cpu), value: 'Linux', tagType: 'info' },
+  { label: 'arch', icon: markRaw(Platform), value: 'amd64', tagType: 'info' },
 ]
 
 // 获取统计数据
 async function fetchStats() {
   try {
     const { data: res } = await getDashboardStats()
-    if (res.code === 0) {
+    if (res.data) {
       stats.value = res.data
     }
-  } catch (error) {
-    console.error('Failed to fetch dashboard stats:', error)
+  } catch {
+    // 错误已在 request 拦截器中处理
   }
 }
 
 onMounted(() => {
-  fetchStats()
   updateTime()
   timer = setInterval(updateTime, 1000)
+  fetchStats()
 })
 
 onUnmounted(() => {
@@ -343,43 +319,7 @@ onUnmounted(() => {
 
 <style scoped>
 .dashboard-container {
-  min-height: calc(100vh - 84px);
-  padding: 20px;
-}
-
-/* 欢迎卡片 */
-.welcome-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-html.dark .welcome-card {
-  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
-}
-
-.welcome-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.welcome-card::after {
-  content: '';
-  position: absolute;
-  bottom: -30%;
-  right: 10%;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  max-width: 1400px;
 }
 
 .welcome-content {
@@ -408,24 +348,46 @@ html.dark .welcome-card {
   text-align: right;
 }
 
-.welcome-time .el-text {
+.welcome-time-text {
   color: rgba(255, 255, 255, 0.7) !important;
   font-size: 14px;
 }
 
-/* 统计卡片 */
-.stat-card {
+/* 统计网格 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .stat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-item {
+  background: var(--el-bg-color);
   border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02);
   transition: all 0.3s ease;
   cursor: pointer;
+  overflow: hidden;
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
 }
 
-.stat-card-inner {
-  padding-bottom: 16px;
+.stat-item-inner {
+  padding: 20px 20px 16px;
 }
 
 .stat-title {
@@ -437,24 +399,56 @@ html.dark .welcome-card {
 }
 
 .stat-footer {
-  margin: 0 -24px -24px;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-top: 1px solid var(--el-border-color-extra-light);
-  border-radius: 0 0 10px 10px;
   text-align: center;
 }
 
-/* 卡片头部 */
-.card-header {
+/* 内容网格 */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.content-section {
+  background: var(--el-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02);
+  padding: 20px;
+}
+
+.section-header {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 16px;
   font-weight: 600;
   color: var(--el-text-color-primary);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--el-border-color-extra-light);
 }
 
 /* 快捷入口 */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .entry-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .quick-entry-item {
   display: flex;
   flex-direction: column;
@@ -497,6 +491,16 @@ html.dark .quick-entry-item:hover .quick-entry-icon {
   font-weight: 500;
 }
 
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
 /* 系统信息描述 */
 .desc-label {
   display: flex;
@@ -518,6 +522,10 @@ html.dark .quick-entry-item:hover .quick-entry-icon {
 
   .welcome-time {
     text-align: left;
+  }
+
+  .welcome-banner {
+    padding: 24px 20px;
   }
 }
 </style>

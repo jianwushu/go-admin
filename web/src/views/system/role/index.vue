@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <!-- 搜索区域 -->
-    <el-card shadow="never" class="mb-4">
+    <div class="search-section mb-4">
       <el-form :model="queryParams" inline>
         <el-form-item :label="t('role.name')">
           <el-input
@@ -38,7 +38,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
 
     <!-- 操作栏 -->
     <el-card shadow="never">

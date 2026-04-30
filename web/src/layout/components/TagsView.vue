@@ -166,7 +166,7 @@ watch(
   width: 100%;
   background: inherit;
   border-bottom: 1px solid var(--el-border-color-light);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   transition: border-color 0.3s ease;
 }
 

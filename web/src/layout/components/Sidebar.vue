@@ -99,6 +99,7 @@ const menuRoutes = computed(() => {
   background-color: var(--sidebar-bg);
   transition: width 0.3s, transform 0.3s, background-color 0.3s;
   overflow: hidden;
+  border-right: 1px solid var(--el-border-color-light);
 }
 
 .sidebar-container.is-collapse {
@@ -127,7 +128,7 @@ const menuRoutes = computed(() => {
   height: 50px;
   padding: 0 12px;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .sidebar-logo-link {
@@ -146,7 +147,7 @@ const menuRoutes = computed(() => {
 
 .sidebar-logo-title {
   margin-left: 10px;
-  color: #fff;
+  color: var(--sidebar-text);
   font-size: 16px;
   font-weight: 600;
   white-space: nowrap;

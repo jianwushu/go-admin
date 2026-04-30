@@ -180,11 +180,7 @@ async function handleLogout() {
 }
 
 .hamburger:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-html.dark .hamburger:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--el-fill-color);
 }
 
 .navbar-right {
@@ -206,12 +202,8 @@ html.dark .hamburger:hover {
 }
 
 .navbar-action:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--el-fill-color);
   color: var(--el-color-primary);
-}
-
-html.dark .navbar-action:hover {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .navbar-user {
@@ -225,11 +217,7 @@ html.dark .navbar-action:hover {
 }
 
 .navbar-user:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-html.dark .navbar-user:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--el-fill-color);
 }
 
 .navbar-username {
