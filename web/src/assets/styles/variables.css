@@ -1,0 +1,173 @@
+/* CSS 变量 - 清新简约主题 */
+
+/* ===== 白天模式（默认） ===== */
+:root {
+  /* 主色调 - 清新蓝绿 */
+  --el-color-primary: #3b82f6;
+  --el-color-primary-light-3: #7db3fc;
+  --el-color-primary-light-5: #a3c9fd;
+  --el-color-primary-light-7: #c9deff;
+  --el-color-primary-light-8: #dceaff;
+  --el-color-primary-light-9: #eef5ff;
+  --el-color-primary-dark-2: #2563eb;
+
+  /* 成功色 - 清新绿 */
+  --el-color-success: #22c55e;
+  --el-color-success-light-3: #6ee7a0;
+  --el-color-success-light-5: #95edba;
+  --el-color-success-light-7: #bcf3d5;
+  --el-color-success-light-8: #d1f7e3;
+  --el-color-success-light-9: #e8faf0;
+  --el-color-success-dark-2: #16a34a;
+
+  /* 警告色 - 温暖橙 */
+  --el-color-warning: #f59e0b;
+  --el-color-warning-light-3: #f9be53;
+  --el-color-warning-light-5: #fad485;
+  --el-color-warning-light-7: #fce5ab;
+  --el-color-warning-light-8: #fdefc5;
+  --el-color-warning-light-9: #fef7e6;
+  --el-color-warning-dark-2: #d97706;
+
+  /* 危险色 - 柔和红 */
+  --el-color-danger: #ef4444;
+  --el-color-danger-light-3: #f59191;
+  --el-color-danger-light-5: #f8b3b3;
+  --el-color-danger-light-7: #fbd1d1;
+  --el-color-danger-light-8: #fde1e1;
+  --el-color-danger-light-9: #fef0f0;
+  --el-color-danger-dark-2: #dc2626;
+
+  /* 信息色 - 中性灰蓝 */
+  --el-color-info: #64748b;
+  --el-color-info-light-3: #94a3b8;
+  --el-color-info-light-5: #b0bec5;
+  --el-color-info-light-7: #cfd8dc;
+  --el-color-info-light-8: #dfe6e9;
+  --el-color-info-light-9: #eceff1;
+  --el-color-info-dark-2: #475569;
+
+  /* 背景色 - 清新白 */
+  --el-bg-color: #ffffff;
+  --el-bg-color-page: #f8fafc;
+  --el-bg-color-overlay: #ffffff;
+
+  /* 文字色 */
+  --el-text-color-primary: #1e293b;
+  --el-text-color-regular: #334155;
+  --el-text-color-secondary: #64748b;
+  --el-text-color-placeholder: #94a3b8;
+  --el-text-color-disabled: #cbd5e1;
+
+  /* 边框色 */
+  --el-border-color: #e2e8f0;
+  --el-border-color-light: #e2e8f0;
+  --el-border-color-lighter: #e2e8f0;
+  --el-border-color-extra-light: #f1f5f9;
+  --el-border-color-dark: #cbd5e1;
+
+  /* 填充色 */
+  --el-fill-color: #f1f5f9;
+  --el-fill-color-light: #f8fafc;
+  --el-fill-color-lighter: #f8fafc;
+  --el-fill-color-extra-light: #f8fafc;
+  --el-fill-color-dark: #e2e8f0;
+  --el-fill-color-blank: #ffffff;
+
+  /* 阴影 */
+  --el-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --el-box-shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --el-box-shadow-lighter: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --el-box-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* 侧边栏配色 - 清新深蓝 */
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #94a3b8;
+  --sidebar-active-text: #3b82f6;
+  --sidebar-hover-bg: rgba(59, 130, 246, 0.08);
+  --sidebar-active-bg: rgba(59, 130, 246, 0.12);
+  --sidebar-width: 210px;
+  --sidebar-collapsed-width: 64px;
+
+  /* 顶部导航 */
+  --navbar-height: 50px;
+  --tagsview-height: 34px;
+
+  /* 内容区背景 */
+  --content-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== 黑夜模式 ===== */
+html.dark {
+  /* 主色调 - 保持清新蓝 */
+  --el-color-primary: #60a5fa;
+  --el-color-primary-light-3: #93c5fd;
+  --el-color-primary-light-5: #a3c9fd;
+  --el-color-primary-light-7: #c9deff;
+  --el-color-primary-light-8: #dceaff;
+  --el-color-primary-light-9: #eef5ff;
+  --el-color-primary-dark-2: #3b82f6;
+
+  /* 成功色 */
+  --el-color-success: #4ade80;
+  --el-color-success-dark-2: #22c55e;
+
+  /* 警告色 */
+  --el-color-warning: #fbbf24;
+  --el-color-warning-dark-2: #f59e0b;
+
+  /* 危险色 */
+  --el-color-danger: #f87171;
+  --el-color-danger-dark-2: #ef4444;
+
+  /* 信息色 */
+  --el-color-info: #94a3b8;
+  --el-color-info-dark-2: #64748b;
+
+  /* 背景色 - 深色系 */
+  --el-bg-color: #1e1e2e;
+  --el-bg-color-page: #14141f;
+  --el-bg-color-overlay: #252536;
+
+  /* 文字色 */
+  --el-text-color-primary: #e2e8f0;
+  --el-text-color-regular: #cbd5e1;
+  --el-text-color-secondary: #94a3b8;
+  --el-text-color-placeholder: #64748b;
+  --el-text-color-disabled: #475569;
+
+  /* 边框色 */
+  --el-border-color: #2d2d3f;
+  --el-border-color-light: #2d2d3f;
+  --el-border-color-lighter: #2d2d3f;
+  --el-border-color-extra-light: #252536;
+  --el-border-color-dark: #3d3d52;
+
+  /* 填充色 */
+  --el-fill-color: #252536;
+  --el-fill-color-light: #1e1e2e;
+  --el-fill-color-lighter: #1e1e2e;
+  --el-fill-color-extra-light: #1e1e2e;
+  --el-fill-color-dark: #2d2d3f;
+  --el-fill-color-blank: #1e1e2e;
+
+  /* 阴影 */
+  --el-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+  --el-box-shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+  --el-box-shadow-lighter: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  --el-box-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+
+  /* 侧边栏配色 - 深色 */
+  --sidebar-bg: #14141f;
+  --sidebar-text: #94a3b8;
+  --sidebar-active-text: #60a5fa;
+  --sidebar-hover-bg: rgba(96, 165, 250, 0.08);
+  --sidebar-active-bg: rgba(96, 165, 250, 0.12);
+
+  /* 内容区背景 */
+  --content-bg: #14141f;
+  --card-bg: #1e1e2e;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+}

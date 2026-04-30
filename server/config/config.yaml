@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  mode: debug              # debug / release / test
+
+# 数据库表前缀，为空则不加前缀
+# 例如设置为 xy_，则表名变为 xy_user, xy_role 等
+table_prefix: xy_
+
+database:
+  type: sqlite             # sqlite / mysql / postgres / oracle
+  sqlite:
+    path: ./data/go-admin.db
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: ""
+    dbname: go_admin
+  postgres:
+    host: 127.0.0.1
+    port: 5432
+    username: postgres
+    password: ""
+    dbname: go_admin
+  oracle:
+    host: 127.0.0.1
+    port: 1521
+    username: ""
+    password: ""
+    dbname: go_admin
+
+redis:
+  addr: 127.0.0.1:6379
+  password: "123456"
+  db: 0
+
+jwt:
+  secret: go-admin-secret-key-change-in-production
+  expire: 7200             # Token 过期时间（秒）
+  refresh: 604800          # 刷新过期时间（秒）
+
+log:
+  level: info              # debug / info / warn / error
+  path: ./logs
+  max_size: 5            # 单文件最大 MB
+  max_backups: 30          # 最大备份数
+  max_age: 7               # 最大保留天数
+
+codegen:
+  output: ./output         # 代码生成输出目录

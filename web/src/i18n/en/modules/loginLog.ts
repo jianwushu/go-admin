@@ -1,0 +1,19 @@
+export default {
+  loginLog: {
+    title: 'Login Log',
+    username: 'Username',
+    usernamePlaceholder: 'Enter username',
+    ip: 'IP Address',
+    ipPlaceholder: 'Enter IP address',
+    location: 'Location',
+    browser: 'Browser',
+    os: 'Operating System',
+    status: 'Status',
+    success: 'Success',
+    fail: 'Fail',
+    msg: 'Message',
+    createdAt: 'Login Time',
+    clear: 'Clear',
+    clearConfirm: 'Are you sure to clear all login logs? This action cannot be undone!',
+  },
+}

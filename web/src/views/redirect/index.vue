@@ -1,0 +1,23 @@
+<script setup lang="ts">
+import { onBeforeMount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+defineOptions({ name: 'Redirect' })
+
+const route = useRoute()
+const router = useRouter()
+
+onBeforeMount(() => {
+  const { params, query } = route
+  const { path } = params
+  // 重定向到原始路径
+  router.replace({
+    path: '/' + (Array.isArray(path) ? path.join('/') : path),
+    query,
+  })
+})
+</script>
+
+<template>
+  <div />
+</template>

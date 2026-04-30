@@ -1,0 +1,192 @@
+@import './tailwind.css';
+@import './variables.css';
+
+/* 全局样式重置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 滚动条样式 - 白天模式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 滚动条样式 - 暗黑模式 */
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Element-Plus 暗黑模式全局覆盖 */
+html.dark {
+  color-scheme: dark;
+}
+
+/* 暗黑模式下的 el-card 适配 */
+html.dark .el-card {
+  --el-card-bg-color: var(--card-bg);
+  border-color: var(--el-border-color);
+}
+
+/* 暗黑模式下的 el-table 适配 */
+html.dark .el-table {
+  --el-table-bg-color: var(--card-bg);
+  --el-table-tr-bg-color: var(--card-bg);
+  --el-table-header-bg-color: var(--el-fill-color);
+  --el-table-row-hover-bg-color: var(--el-fill-color-light);
+  --el-table-border-color: var(--el-border-color);
+}
+
+/* 暗黑模式下的 el-dialog 适配 */
+html.dark .el-dialog {
+  --el-dialog-bg-color: var(--el-bg-color-overlay);
+}
+
+/* 暗黑模式下的 el-drawer 适配 */
+html.dark .el-drawer {
+  --el-drawer-bg-color: var(--el-bg-color-overlay);
+}
+
+/* 暗黑模式下的 el-input 适配 */
+html.dark .el-input__wrapper {
+  background-color: var(--el-fill-color);
+}
+
+/* 暗黑模式下的 el-descriptions 适配 */
+html.dark .el-descriptions {
+  --el-descriptions-item-bordered-label-background: var(--el-fill-color);
+}
+
+/* 暗黑模式下的 NProgress 颜色 */
+html.dark #nprogress .bar {
+  background: var(--el-color-primary) !important;
+}
+
+/* 暗黑模式下的选中文本颜色 */
+html.dark ::selection {
+  background: rgba(96, 165, 250, 0.3);
+  color: #e2e8f0;
+}
+
+/* ===== 响应式布局 ===== */
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  /* 表格响应式 */
+  .el-table {
+    font-size: 13px;
+  }
+  
+  .el-table .el-table__header-wrapper {
+    overflow-x: auto;
+  }
+  
+  /* 表单响应式 */
+  .el-dialog {
+    width: 95% !important;
+    margin: 16px auto !important;
+  }
+  
+  .el-dialog__body {
+    padding: 12px 16px !important;
+  }
+  
+  .el-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .el-form-item__label {
+    float: none;
+    display: block;
+    text-align: left !important;
+    padding: 0 0 8px 0;
+    line-height: 1.4;
+  }
+  
+  .el-form-item__content {
+    margin-left: 0 !important;
+  }
+  
+  /* el-row 响应式 */
+  .el-row .el-col {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* 分页响应式 */
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .el-pagination .el-pagination__total,
+  .el-pagination .el-pagination__sizes {
+    display: none;
+  }
+  
+  /* 卡片响应式 */
+  .el-card__body {
+    padding: 12px;
+  }
+  
+  /* 按钮组响应式 */
+  .el-button + .el-button {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+
+/* 平板端适配 */
+@media screen and (min-width: 769px) and (max-width: 992px) {
+  .el-dialog {
+    width: 80% !important;
+  }
+  
+  .el-form-item__label {
+    width: 100px !important;
+  }
+}

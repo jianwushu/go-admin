@@ -1,0 +1,19 @@
+export default {
+  loginLog: {
+    title: '登录日志',
+    username: '用户名',
+    usernamePlaceholder: '请输入用户名',
+    ip: 'IP地址',
+    ipPlaceholder: '请输入IP地址',
+    location: '登录地点',
+    browser: '浏览器',
+    os: '操作系统',
+    status: '状态',
+    success: '成功',
+    fail: '失败',
+    msg: '提示信息',
+    createdAt: '登录时间',
+    clear: '清空',
+    clearConfirm: '确定要清空所有登录日志吗？此操作不可恢复！',
+  },
+}
