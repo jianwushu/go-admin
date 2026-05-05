@@ -66,5 +66,8 @@ export default {
     enabled: '正常',
     disabled: '禁用',
     assignedWarning: '该角色已分配给用户，无法删除',
+    confirmBatchDelete: '确定要批量删除选中的角色吗？',
+    batchDeleteSuccess: '批量删除成功',
+    selectAtLeastOne: '请至少选择一条记录',
   },
 }

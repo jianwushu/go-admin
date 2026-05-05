@@ -94,6 +94,11 @@ func (r *RoleRepository) Delete(id int64) error {
 	return r.DB.Delete(&entity.Role{}, id).Error
 }
 
+// DeleteBatch 批量删除角色（软删除）
+func (r *RoleRepository) DeleteBatch(ids []int64) error {
+	return r.DB.Delete(&entity.Role{}, ids).Error
+}
+
 // UpdateStatus 更新角色状态
 func (r *RoleRepository) UpdateStatus(id int64, status int) error {
 	return r.DB.Model(&entity.Role{}).Where("id = ?", id).Update("status", status).Error

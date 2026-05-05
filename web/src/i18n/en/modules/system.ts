@@ -66,5 +66,8 @@ export default {
     enabled: 'Enabled',
     disabled: 'Disabled',
     assignedWarning: 'This role is assigned to users and cannot be deleted',
+    confirmBatchDelete: 'Are you sure to delete the selected roles?',
+    batchDeleteSuccess: 'Batch delete successful',
+    selectAtLeastOne: 'Please select at least one record',
   },
 }

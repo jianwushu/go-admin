@@ -66,9 +66,10 @@ export function updateRole(data: RoleFormData) {
   return request.put<ApiResponse<null>>('/system/role', data)
 }
 
-/** 删除角色 */
-export function deleteRole(id: number) {
-  return request.delete<ApiResponse<null>>(`/system/role/${id}`)
+/** 删除角色（支持单个或多个ID） */
+export function deleteRole(id: number | number[]) {
+  const idStr = Array.isArray(id) ? id.join(',') : id
+  return request.delete<ApiResponse<null>>(`/system/role/${idStr}`)
 }
 
 /** 修改角色状态 */

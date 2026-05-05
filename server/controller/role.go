@@ -2,6 +2,7 @@ package controller
 
 import (
 	"strconv"
+	"strings"
 
 	"go-admin/model/request"
 	"go-admin/service"
@@ -144,23 +145,44 @@ func (ctrl *RoleController) Update(c *gin.Context) {
 	utils.SuccessWithMessage(c, "更新成功", nil)
 }
 
-// Delete 删除角色
+// Delete 删除角色（支持单个或多个ID，逗号分隔）
 // @Summary 删除角色
-// @Description 根据角色ID删除角色
+// @Description 根据角色ID删除角色，支持逗号分隔的多个ID
 // @Tags 角色管理
 // @Security BearerAuth
 // @Produce json
-// @Param id path int true "角色ID"
+// @Param id path string true "角色ID，多个用逗号分隔"
 // @Success 200 {object} response.Response
 // @Router /api/v1/system/role/{id} [delete]
 func (ctrl *RoleController) Delete(c *gin.Context) {
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-	if err != nil {
-		utils.Fail(c, 400, "参数错误：无效的角色ID")
+	idStr := c.Param("id")
+	if idStr == "" {
+		utils.Fail(c, 400, "参数错误：角色ID不能为空")
 		return
 	}
 
-	if err := ctrl.roleService.Delete(id); err != nil {
+	// 解析逗号分隔的ID列表
+	idParts := strings.Split(idStr, ",")
+	var ids []int64
+	for _, part := range idParts {
+		part = strings.TrimSpace(part)
+		if part == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(part, 10, 64)
+		if err != nil {
+			utils.Fail(c, 400, "参数错误：无效的角色ID")
+			return
+		}
+		ids = append(ids, id)
+	}
+
+	if len(ids) == 0 {
+		utils.Fail(c, 400, "参数错误：角色ID列表不能为空")
+		return
+	}
+
+	if err := ctrl.roleService.Delete(ids); err != nil {
 		utils.Fail(c, 500, err.Error())
 		return
 	}

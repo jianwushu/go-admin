@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4">
-    <!-- 搜索区域 -->
-    <div class="search-section mb-4">
+  <div style="padding: 16px;">
+    <!-- 查询栏 -->
+    <el-card shadow="never" style="margin-bottom: 16px;">
       <el-form :model="queryParams" inline>
         <el-form-item :label="t('operationLog.module')">
           <el-input
@@ -37,37 +37,38 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">
-            <el-icon class="mr-1"><Search /></el-icon>
+            <el-icon style="margin-right: 4px;"><Search /></el-icon>
             {{ t('common.search') }}
           </el-button>
           <el-button @click="handleReset">
-            <el-icon class="mr-1"><Refresh /></el-icon>
+            <el-icon style="margin-right: 4px;"><Refresh /></el-icon>
             {{ t('common.reset') }}
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-card>
 
-    <!-- 数据表格 -->
-    <el-card shadow="never">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-medium">{{ t('operationLog.title') }}</span>
+    <!-- 表格区域 -->
+    <el-card shadow="never" body-style="padding: 20px;">
+      <!-- 表格工具栏 -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <span style="font-weight: 500; font-size: 18px;">{{ t('operationLog.title') }}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
           <el-button type="danger" v-permission="'monitor:operationLog:remove'" @click="handleClear">
-            <el-icon class="mr-1"><Delete /></el-icon>
+            <el-icon style="margin-right: 4px;"><Delete /></el-icon>
             {{ t('operationLog.clear') }}
           </el-button>
         </div>
-      </template>
+      </div>
 
+      <!-- 表格主体 -->
       <el-table
         v-loading="loading"
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 100%; margin-bottom: 16px;"
       >
-        <!-- <el-table-column prop="id" label="ID" width="70" align="center" /> -->
         <el-table-column prop="module" :label="t('operationLog.module')" min-width="100" show-overflow-tooltip />
         <el-table-column prop="action" :label="t('operationLog.action')" min-width="80" show-overflow-tooltip />
         <el-table-column :label="t('operationLog.method')" width="100" align="center">
@@ -106,17 +107,12 @@
       </el-table>
 
       <!-- 分页 -->
-      <div class="mt-4 flex justify-end">
-        <el-pagination
-          v-model:current-page="queryParams.page"
-          v-model:page-size="queryParams.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <Pagination
+        v-model:page="queryParams.page"
+        v-model:page-size="queryParams.pageSize"
+        :total="total"
+        @change="fetchData"
+      />
     </el-card>
 
     <!-- 详情弹窗 -->
@@ -188,6 +184,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh, Delete } from '@element-plus/icons-vue'
 import { getOperationLogList, clearOperationLog } from '@/api/operationLog'
 import type { OperationLogItem, OperationLogListParams } from '@/api/operationLog'
+import Pagination from '@/components/Pagination.vue'
 
 defineOptions({ name: 'OperationLog' })
 
@@ -239,17 +236,6 @@ function handleReset() {
   queryParams.method = undefined
   queryParams.status = undefined
   queryParams.page = 1
-  fetchData()
-}
-
-/** 分页大小变化 */
-function handleSizeChange() {
-  queryParams.page = 1
-  fetchData()
-}
-
-/** 页码变化 */
-function handleCurrentChange() {
   fetchData()
 }
 

@@ -40,7 +40,6 @@ import { useI18n } from 'vue-i18n'
 import { Close } from '@element-plus/icons-vue'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 import type { TagView } from '@/types/store'
-import type { RouteRecordRaw } from 'vue-router'
 
 defineOptions({ name: 'TagsView' })
 

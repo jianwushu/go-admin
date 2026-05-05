@@ -195,38 +195,40 @@ func (s *RoleService) Update(req request.RoleUpdateRequest) error {
 	return nil
 }
 
-// Delete 删除角色
-func (s *RoleService) Delete(id int64) error {
-	// 检查角色是否存在
-	_, err := s.roleRepo.FindByID(id)
-	if err != nil {
-		return errors.New("角色不存在")
+// Delete 删除角色（支持单个或多个ID）
+func (s *RoleService) Delete(ids []int64) error {
+	for _, id := range ids {
+		// 检查角色是否存在
+		_, err := s.roleRepo.FindByID(id)
+		if err != nil {
+			return errors.New("角色不存在")
+		}
+
+		// 不允许删除超级管理员角色
+		if id == 1 {
+			return errors.New("不允许删除超级管理员角色")
+		}
+
+		// 检查角色是否已分配给用户
+		assigned, err := s.roleRepo.IsRoleAssignedToUser(id)
+		if err != nil {
+			return err
+		}
+		if assigned {
+			return errors.New("该角色已分配给用户，无法删除")
+		}
 	}
 
-	// 不允许删除超级管理员角色
-	if id == 1 {
-		return errors.New("不允许删除超级管理员角色")
-	}
-
-	// 检查角色是否已分配给用户
-	assigned, err := s.roleRepo.IsRoleAssignedToUser(id)
-	if err != nil {
-		return err
-	}
-	if assigned {
-		return errors.New("该角色已分配给用户，无法删除")
-	}
-
-	// 删除角色
-	if err := s.roleRepo.Delete(id); err != nil {
+	// 批量删除角色
+	if err := s.roleRepo.DeleteBatch(ids); err != nil {
 		return errors.New("删除角色失败：" + err.Error())
 	}
 
-	// 清除角色菜单关联
-	_ = s.roleRepo.SetRoleMenus(id, nil)
-
-	// 清除角色部门关联
-	_ = s.roleRepo.SetRoleDepts(id, nil)
+	// 清除角色菜单关联和角色部门关联
+	for _, id := range ids {
+		_ = s.roleRepo.SetRoleMenus(id, nil)
+		_ = s.roleRepo.SetRoleDepts(id, nil)
+	}
 
 	return nil
 }

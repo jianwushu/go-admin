@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4">
-    <!-- 搜索区域 -->
-    <div class="search-section mb-4">
+  <div style="padding: 16px;">
+    <!-- 查询栏 -->
+    <el-card shadow="never" style="margin-bottom: 16px;">
       <el-form :model="queryParams" inline>
         <el-form-item :label="t('role.name')">
           <el-input
@@ -29,40 +29,44 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">
-            <el-icon class="mr-1"><Search /></el-icon>
+            <el-icon style="margin-right: 4px;"><Search /></el-icon>
             {{ t('common.search') }}
           </el-button>
           <el-button @click="handleReset">
-            <el-icon class="mr-1"><Refresh /></el-icon>
+            <el-icon style="margin-right: 4px;"><Refresh /></el-icon>
             {{ t('common.reset') }}
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-card>
 
-    <!-- 操作栏 -->
-    <el-card shadow="never">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-medium">{{ t('role.title') }}</span>
-          <div>
-            <el-button type="primary" v-permission="'system:role:add'" @click="handleAdd">
-              <el-icon class="mr-1"><Plus /></el-icon>
-              {{ t('common.add') }}
-            </el-button>
-          </div>
+    <!-- 表格区域 -->
+    <el-card shadow="never" body-style="padding: 20px;">
+      <!-- 表格工具栏 -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <span style="font-weight: 500; font-size: 18px;">{{ t('role.title') }}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <el-button type="primary" v-permission="'system:role:add'" @click="handleAdd">
+            <el-icon style="margin-right: 4px;"><Plus /></el-icon>
+            {{ t('common.add') }}
+          </el-button>
+          <el-button type="danger" v-permission="'system:role:remove'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+            <el-icon style="margin-right: 4px;"><Delete /></el-icon>
+            {{ t('common.batchDelete') }}
+          </el-button>
         </div>
-      </template>
+      </div>
 
-      <!-- 数据表格 -->
+      <!-- 表格主体 -->
       <el-table
         v-loading="loading"
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 100%; margin-bottom: 16px;"
+        @selection-change="handleSelectionChange"
       >
-        <!-- <el-table-column prop="id" label="ID" width="80" align="center" /> -->
+        <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="name" :label="t('role.name')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="code" :label="t('role.code')" min-width="120" show-overflow-tooltip />
         <el-table-column :label="t('role.dataScope')" min-width="140" align="center">
@@ -99,17 +103,12 @@
       </el-table>
 
       <!-- 分页 -->
-      <div class="mt-4 flex justify-end">
-        <el-pagination
-          v-model:current-page="queryParams.page"
-          v-model:page-size="queryParams.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <Pagination
+        v-model:page="queryParams.page"
+        v-model:page-size="queryParams.pageSize"
+        :total="total"
+        @change="fetchData"
+      />
     </el-card>
 
     <!-- 角色表单弹窗 -->
@@ -130,6 +129,7 @@ import { Search, Refresh, Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { getRoleList, deleteRole, changeRoleStatus } from '@/api/system'
 import type { RoleInfo, RoleListParams } from '@/types/api'
 import RoleForm from './components/RoleForm.vue'
+import Pagination from '@/components/Pagination.vue'
 
 defineOptions({ name: 'RoleManagement' })
 
@@ -148,6 +148,9 @@ const queryParams = reactive<RoleListParams>({
 const loading = ref(false)
 const tableData = ref<RoleInfo[]>([])
 const total = ref(0)
+
+// 多选相关
+const selectedIds = ref<number[]>([])
 
 // 表单相关
 const formVisible = ref(false)
@@ -195,15 +198,9 @@ function handleReset() {
   fetchData()
 }
 
-/** 分页大小变化 */
-function handleSizeChange() {
-  queryParams.page = 1
-  fetchData()
-}
-
-/** 页码变化 */
-function handleCurrentChange() {
-  fetchData()
+/** 多选变化 */
+function handleSelectionChange(rows: RoleInfo[]) {
+  selectedIds.value = rows.map(row => row.id)
 }
 
 /** 新增 */
@@ -228,6 +225,24 @@ async function handleDelete(row: RoleInfo) {
     })
     await deleteRole(row.id)
     ElMessage.success(t('common.success'))
+    fetchData()
+  } catch {
+    // 取消或失败
+  }
+}
+
+/** 批量删除 */
+async function handleBatchDelete() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning(t('role.selectAtLeastOne'))
+    return
+  }
+  try {
+    await ElMessageBox.confirm(t('role.confirmBatchDelete'), t('common.tip'), {
+      type: 'warning',
+    })
+    await deleteRole(selectedIds.value)
+    ElMessage.success(t('role.batchDeleteSuccess'))
     fetchData()
   } catch {
     // 取消或失败
