@@ -319,7 +319,7 @@ onUnmounted(() => {
 
 <style scoped>
 .dashboard-container {
-  max-width: 1400px;
+  width: 100%;
 }
 
 /* 统一间距 */

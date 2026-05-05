@@ -33,8 +33,6 @@ const breadcrumbs = ref<RouteLocationMatched[]>([])
 function getBreadcrumbTitle(item: RouteLocationMatched): string {
   const i18nKey = item.meta?.i18nKey as string
   const title = item.meta?.title as string
-
-  console.log(item,i18nKey,1,title)
   if (!title) return ''
   // 优先使用 i18nKey 翻译
   if (i18nKey) {
