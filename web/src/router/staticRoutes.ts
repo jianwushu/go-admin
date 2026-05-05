@@ -85,4 +85,33 @@ export const staticRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/tool',
+    component: Layout,
+    meta: {
+      hidden: true,
+    },
+    children: [
+      {
+        path: 'codegen/create',
+        name: 'CodegenCreate',
+        component: () => import('@/views/tool/codegen/create.vue'),
+        meta: {
+          title: '新建配置',
+          i18nKey: 'codegen.createConfig',
+          hidden: true,
+        },
+      },
+      {
+        path: 'codegen/edit/:id',
+        name: 'CodegenEdit',
+        component: () => import('@/views/tool/codegen/edit.vue'),
+        meta: {
+          title: '编辑配置',
+          i18nKey: 'codegen.editConfig',
+          hidden: true,
+        },
+      },
+    ],
+  },
 ]

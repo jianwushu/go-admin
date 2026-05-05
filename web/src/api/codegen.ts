@@ -123,6 +123,11 @@ export function getAllConfigs() {
   return request.get<ApiResponse<CodegenConfig[]>>('/codegen/configs')
 }
 
+/** 根据ID获取代码生成配置 */
+export function getConfigById(id: number) {
+  return request.get<ApiResponse<CodegenConfig>>(`/codegen/config/id/${id}`)
+}
+
 /** 删除代码生成配置 */
 export function deleteConfig(id: number) {
   return request.delete<ApiResponse<null>>(`/codegen/config/${id}`)

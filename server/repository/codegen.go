@@ -250,6 +250,16 @@ func (r *CodegenRepository) GetAllConfigs() ([]entity.CodegenConfig, error) {
 	return configs, err
 }
 
+// GetConfigByID 根据ID获取配置
+func (r *CodegenRepository) GetConfigByID(id int64) (*entity.CodegenConfig, error) {
+	var config entity.CodegenConfig
+	err := r.DB.Where("id = ?", id).First(&config).Error
+	if err != nil {
+		return nil, err
+	}
+	return &config, nil
+}
+
 // DeleteConfig 删除配置
 func (r *CodegenRepository) DeleteConfig(id int64) error {
 	return r.DB.Delete(&entity.CodegenConfig{}, id).Error

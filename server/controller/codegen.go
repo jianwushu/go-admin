@@ -191,6 +191,31 @@ func (ctrl *CodegenController) GetAllConfigs(c *gin.Context) {
 	utils.Success(c, configs)
 }
 
+// GetConfigByID 根据ID获取配置
+// @Summary 根据ID获取代码生成配置
+// @Description 根据ID获取代码生成配置
+// @Tags 代码生成
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "配置ID"
+// @Success 200 {object} response.Response{data=response.CodegenConfigResponse}
+// @Router /api/v1/codegen/config/id/{id} [get]
+func (ctrl *CodegenController) GetConfigByID(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		utils.Fail(c, 400, "参数错误：无效的ID")
+		return
+	}
+
+	config, err := ctrl.codegenService.GetConfigByID(id)
+	if err != nil {
+		utils.Fail(c, 404, "配置不存在："+err.Error())
+		return
+	}
+
+	utils.Success(c, config)
+}
+
 // DeleteConfig 删除配置
 // @Summary 删除代码生成配置
 // @Description 根据ID删除代码生成配置

@@ -81,5 +81,10 @@ export default {
     loadConfigFail: 'Failed to load config, no saved config for this table',
     fileList: 'File List',
     selectFileToPreview: 'Select a file on the left to view code',
+    createConfig: 'Create Config',
+    editConfig: 'Edit Config',
+    searchPlaceholder: 'Search by table/class/business name',
+    backToList: 'Back to List',
+    createdAt: 'Created At',
   },
 }

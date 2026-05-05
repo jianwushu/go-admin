@@ -25,6 +25,7 @@ func InitCodegenRouter(r *gin.RouterGroup) {
 		// 配置管理
 		codegenGroup.GET("/configs", codegenCtrl.GetAllConfigs)
 		codegenGroup.GET("/config/:tableName", codegenCtrl.GetConfig)
+		codegenGroup.GET("/config/id/:id", codegenCtrl.GetConfigByID)
 		codegenGroup.POST("/config", codegenCtrl.SaveConfig)
 		codegenGroup.DELETE("/config/:id", codegenCtrl.DeleteConfig)
 	}

@@ -205,12 +205,16 @@ async function copyCode(code: string) {
 </script>
 
 <style scoped>
+.code-preview {
+  height: 100%;
+}
+
 .preview-layout {
   display: flex;
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 4px;
   overflow: hidden;
-  min-height: 500px;
+  height: 100%;
 }
 
 .file-tree {
@@ -218,7 +222,9 @@ async function copyCode(code: string) {
   min-width: 200px;
   border-right: 1px solid var(--el-border-color-lighter);
   background-color: var(--el-bg-color);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .tree-header {
@@ -230,6 +236,12 @@ async function copyCode(code: string) {
   color: var(--el-text-color-primary);
   border-bottom: 1px solid var(--el-border-color-lighter);
   background-color: var(--el-fill-color-light);
+  flex-shrink: 0;
+}
+
+.file-tree :deep(.el-tree) {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .tree-node {
@@ -264,7 +276,6 @@ async function copyCode(code: string) {
   font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
   background-color: #fafafa;
   flex: 1;
-  max-height: 500px;
 }
 
 :root.dark .code-block {

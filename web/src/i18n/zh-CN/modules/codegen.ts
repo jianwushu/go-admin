@@ -81,5 +81,10 @@ export default {
     loadConfigFail: '加载配置失败，该表暂无已保存的配置',
     fileList: '文件列表',
     selectFileToPreview: '请在左侧选择文件查看代码',
+    createConfig: '新建配置',
+    editConfig: '编辑配置',
+    searchPlaceholder: '搜索表名/类名/业务名',
+    backToList: '返回列表',
+    createdAt: '创建时间',
   },
 }

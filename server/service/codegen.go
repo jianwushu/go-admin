@@ -167,6 +167,35 @@ func (s *CodegenService) GetAllConfigs() ([]response.CodegenConfigResponse, erro
 	return result, nil
 }
 
+// GetConfigByID 根据ID获取配置
+func (s *CodegenService) GetConfigByID(id int64) (*response.CodegenConfigResponse, error) {
+	config, err := s.repo.GetConfigByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	var fields []request.ColumnConfig
+	if config.Fields != "" {
+		if err := json.Unmarshal([]byte(config.Fields), &fields); err != nil {
+			return nil, fmt.Errorf("反序列化字段配置失败：%w", err)
+		}
+	}
+
+	return &response.CodegenConfigResponse{
+		ID:           config.ID,
+		TableName:    config.TblName,
+		TableComment: config.TableComment,
+		ClassName:    config.ClassName,
+		BusinessName: config.BusinessName,
+		FunctionName: config.FunctionName,
+		ModuleName:   config.ModuleName,
+		PackageName:  config.PackageName,
+		Author:       config.Author,
+		Fields:       toColumnConfigResponse(fields),
+		CreatedAt:    config.CreatedAt.Format("2006-01-02 15:04:05"),
+	}, nil
+}
+
 // DeleteConfig 删除配置
 func (s *CodegenService) DeleteConfig(id int64) error {
 	return s.repo.DeleteConfig(id)
