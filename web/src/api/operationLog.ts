@@ -26,6 +26,8 @@ export interface OperationLogListParams {
   operator?: string
   status?: number
   method?: string
+  startTime?: string
+  endTime?: string
 }
 
 /** 获取操作日志列表 */

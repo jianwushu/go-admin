@@ -9,11 +9,15 @@ export const useTagsViewStore = defineStore('tagsView', () => {
   /** 添加访问视图 */
   function addVisitedView(view: TagView) {
     if (visitedViews.value.some((v) => v.path === view.path)) return
-    visitedViews.value.push(
-      Object.assign({}, view, {
-        title: view.title || 'no-name',
-      })
-    )
+    const newView = Object.assign({}, view, {
+      title: view.title || 'no-name',
+    })
+    // affix 标签始终插入到第一位，非 affix 标签追加到末尾
+    if (view.meta?.affix) {
+      visitedViews.value.unshift(newView)
+    } else {
+      visitedViews.value.push(newView)
+    }
   }
 
   /** 添加缓存视图 */

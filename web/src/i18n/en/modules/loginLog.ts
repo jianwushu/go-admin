@@ -15,5 +15,8 @@ export default {
     createdAt: 'Login Time',
     clear: 'Clear',
     clearConfirm: 'Are you sure to clear all login logs? This action cannot be undone!',
+    timeRange: 'Time Range',
+    startPlaceholder: 'Start Time',
+    endPlaceholder: 'End Time',
   },
 }

@@ -22,5 +22,8 @@ export default {
     clearConfirm: 'Are you sure to clear all operation logs? This action cannot be undone!',
     detail: 'Detail',
     allMethods: 'All',
+    timeRange: 'Time Range',
+    startPlaceholder: 'Start Time',
+    endPlaceholder: 'End Time',
   },
 }

@@ -22,5 +22,8 @@ export default {
     clearConfirm: '确定要清空所有操作日志吗？此操作不可恢复！',
     detail: '详情',
     allMethods: '全部',
+    timeRange: '时间范围',
+    startPlaceholder: '开始时间',
+    endPlaceholder: '结束时间',
   },
 }

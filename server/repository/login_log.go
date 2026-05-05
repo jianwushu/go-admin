@@ -40,6 +40,12 @@ func (r *LoginLogRepository) FindWithPage(req request.LoginLogListRequest) ([]en
 	if req.Status != nil {
 		query = query.Where("status = ?", *req.Status)
 	}
+	if req.StartTime != "" {
+		query = query.Where("created_at >= ?", req.StartTime)
+	}
+	if req.EndTime != "" {
+		query = query.Where("created_at <= ?", req.EndTime)
+	}
 
 	// 统计总数
 	if err := query.Count(&total).Error; err != nil {

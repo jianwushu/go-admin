@@ -35,6 +35,18 @@
             <el-option :label="t('operationLog.fail')" :value="0" />
           </el-select>
         </el-form-item>
+        <el-form-item :label="t('operationLog.timeRange')">
+          <el-date-picker
+            v-model="timeRange"
+            type="datetimerange"
+            range-separator="-"
+            :start-placeholder="t('operationLog.startPlaceholder')"
+            :end-placeholder="t('operationLog.endPlaceholder')"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            style="width: 360px"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">
             <el-icon style="margin-right: 4px;"><Search /></el-icon>
@@ -198,7 +210,12 @@ const queryParams = reactive<OperationLogListParams>({
   operator: undefined,
   method: undefined,
   status: undefined,
+  startTime: undefined,
+  endTime: undefined,
 })
+
+// 时间范围
+const timeRange = ref<[string, string] | null>(null)
 
 // 表格数据
 const loading = ref(false)
@@ -226,6 +243,14 @@ async function fetchData() {
 /** 搜索 */
 function handleSearch() {
   queryParams.page = 1
+  // 同步时间范围到查询参数
+  if (timeRange.value) {
+    queryParams.startTime = timeRange.value[0]
+    queryParams.endTime = timeRange.value[1]
+  } else {
+    queryParams.startTime = undefined
+    queryParams.endTime = undefined
+  }
   fetchData()
 }
 
@@ -235,6 +260,9 @@ function handleReset() {
   queryParams.operator = undefined
   queryParams.method = undefined
   queryParams.status = undefined
+  queryParams.startTime = undefined
+  queryParams.endTime = undefined
+  timeRange.value = null
   queryParams.page = 1
   fetchData()
 }
@@ -286,7 +314,23 @@ function formatJson(str: string): string {
   }
 }
 
+/** 获取当天时间范围 */
+function getTodayTimeRange(): [string, string] {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const startTime = `${year}-${month}-${day} 00:00:00`
+  const endTime = `${year}-${month}-${day} 23:59:59`
+  return [startTime, endTime]
+}
+
 onMounted(() => {
+  // 默认查询当天
+  const todayRange = getTodayTimeRange()
+  timeRange.value = todayRange
+  queryParams.startTime = todayRange[0]
+  queryParams.endTime = todayRange[1]
   fetchData()
 })
 </script>

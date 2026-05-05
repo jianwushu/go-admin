@@ -21,6 +21,8 @@ export interface LoginLogListParams {
   username?: string
   ip?: string
   status?: number
+  startTime?: string
+  endTime?: string
 }
 
 /** 获取登录日志列表 */

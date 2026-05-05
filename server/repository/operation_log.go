@@ -38,6 +38,12 @@ func (r *OperationLogRepository) FindWithPage(req request.OperationLogListReques
 	if req.Method != "" {
 		query = query.Where("method = ?", req.Method)
 	}
+	if req.StartTime != "" {
+		query = query.Where("created_at >= ?", req.StartTime)
+	}
+	if req.EndTime != "" {
+		query = query.Where("created_at <= ?", req.EndTime)
+	}
 
 	// 统计总数
 	if err := query.Count(&total).Error; err != nil {

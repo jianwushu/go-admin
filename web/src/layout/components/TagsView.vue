@@ -78,6 +78,7 @@ function initAffixTags() {
 
 onMounted(() => {
   initAffixTags()
+  addTag()
 })
 
 const contextMenu = reactive({
@@ -177,8 +178,7 @@ watch(
   () => route.path,
   () => {
     addTag()
-  },
-  { immediate: true }
+  }
 )
 
 watch(

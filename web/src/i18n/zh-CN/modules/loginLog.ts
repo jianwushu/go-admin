@@ -15,5 +15,8 @@ export default {
     createdAt: '登录时间',
     clear: '清空',
     clearConfirm: '确定要清空所有登录日志吗？此操作不可恢复！',
+    timeRange: '时间范围',
+    startPlaceholder: '开始时间',
+    endPlaceholder: '结束时间',
   },
 }
