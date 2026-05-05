@@ -23,9 +23,10 @@ export function updateUser(data: UserFormData) {
   return request.put<ApiResponse<null>>('/system/user', data)
 }
 
-/** 删除用户 */
-export function deleteUser(id: number) {
-  return request.delete<ApiResponse<null>>(`/system/user/${id}`)
+/** 删除用户（支持单个或多个ID） */
+export function deleteUser(id: number | number[]) {
+  const idStr = Array.isArray(id) ? id.join(',') : id
+  return request.delete<ApiResponse<null>>(`/system/user/${idStr}`)
 }
 
 /** 重置用户密码 */

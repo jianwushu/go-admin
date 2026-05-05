@@ -2,6 +2,7 @@ package controller
 
 import (
 	"strconv"
+	"strings"
 
 	"go-admin/middleware"
 	"go-admin/model/request"
@@ -130,23 +131,44 @@ func (ctrl *UserController) Update(c *gin.Context) {
 	utils.SuccessWithMessage(c, "更新成功", nil)
 }
 
-// Delete 删除用户
+// Delete 删除用户（支持单个或多个ID，逗号分隔）
 // @Summary 删除用户
-// @Description 根据用户ID删除用户
+// @Description 根据用户ID删除用户，支持逗号分隔的多个ID
 // @Tags 用户管理
 // @Security BearerAuth
 // @Produce json
-// @Param id path int true "用户ID"
+// @Param id path string true "用户ID，多个用逗号分隔"
 // @Success 200 {object} response.Response
 // @Router /api/v1/system/user/{id} [delete]
 func (ctrl *UserController) Delete(c *gin.Context) {
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-	if err != nil {
-		utils.Fail(c, 400, "参数错误：无效的用户ID")
+	idStr := c.Param("id")
+	if idStr == "" {
+		utils.Fail(c, 400, "参数错误：用户ID不能为空")
 		return
 	}
 
-	if err := ctrl.userService.Delete(id); err != nil {
+	// 解析逗号分隔的ID列表
+	idParts := strings.Split(idStr, ",")
+	var ids []int64
+	for _, part := range idParts {
+		part = strings.TrimSpace(part)
+		if part == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(part, 10, 64)
+		if err != nil {
+			utils.Fail(c, 400, "参数错误：无效的用户ID")
+			return
+		}
+		ids = append(ids, id)
+	}
+
+	if len(ids) == 0 {
+		utils.Fail(c, 400, "参数错误：用户ID列表不能为空")
+		return
+	}
+
+	if err := ctrl.userService.Delete(ids); err != nil {
 		utils.Fail(c, 500, err.Error())
 		return
 	}

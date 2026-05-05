@@ -112,9 +112,9 @@ func (r *UserRepository) Update(user *entity.User) error {
 	return r.DB.Save(user).Error
 }
 
-// Delete 删除用户（软删除）
-func (r *UserRepository) Delete(id int64) error {
-	return r.DB.Delete(&entity.User{}, id).Error
+// Delete 删除用户（软删除），支持单个或多个ID
+func (r *UserRepository) Delete(ids []int64) error {
+	return r.DB.Delete(&entity.User{}, ids).Error
 }
 
 // UpdateStatus 更新用户状态

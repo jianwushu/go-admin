@@ -32,6 +32,9 @@ export default {
     resetPasswordSuccess: 'Password reset successfully',
     enabled: 'Enabled',
     disabled: 'Disabled',
+    confirmBatchDelete: 'Are you sure to delete the selected users?',
+    batchDeleteSuccess: 'Batch delete successful',
+    selectAtLeastOne: 'Please select at least one record',
   },
   role: {
     title: 'Role Management',

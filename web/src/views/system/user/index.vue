@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4">
-    <!-- 搜索区域 -->
-    <div class="search-section mb-4">
+  <div style="padding: 16px;">
+    <!-- 查询栏 -->
+    <el-card shadow="never" style="margin-bottom: 16px;">
       <el-form :model="queryParams" inline>
         <el-form-item :label="t('user.username')">
           <el-input
@@ -20,40 +20,44 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">
-            <el-icon class="mr-1"><Search /></el-icon>
+            <el-icon style="margin-right: 4px;"><Search /></el-icon>
             {{ t('common.search') }}
           </el-button>
           <el-button @click="handleReset">
-            <el-icon class="mr-1"><Refresh /></el-icon>
+            <el-icon style="margin-right: 4px;"><Refresh /></el-icon>
             {{ t('common.reset') }}
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-card>
 
-    <!-- 操作栏 -->
-    <el-card shadow="never">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-medium">{{ t('user.title') }}</span>
-          <div>
-            <el-button type="primary" v-permission="'system:user:add'" @click="handleAdd">
-              <el-icon class="mr-1"><Plus /></el-icon>
-              {{ t('common.add') }}
-            </el-button>
-          </div>
+    <!-- 表格区域 -->
+    <el-card shadow="never" body-style="padding: 20px;">
+      <!-- 表格工具栏 -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <span style="font-weight: 500; font-size: 18px;">{{ t('user.title') }}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <el-button type="primary" v-permission="'system:user:add'" @click="handleAdd">
+            <el-icon style="margin-right: 4px;"><Plus /></el-icon>
+            {{ t('common.add') }}
+          </el-button>
+          <el-button type="danger" v-permission="'system:user:remove'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+            <el-icon style="margin-right: 4px;"><Delete /></el-icon>
+            {{ t('common.batchDelete') }}
+          </el-button>
         </div>
-      </template>
+      </div>
 
-      <!-- 数据表格 -->
+      <!-- 表格主体 -->
       <el-table
         v-loading="loading"
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 100%; margin-bottom: 16px;"
+        @selection-change="handleSelectionChange"
       >
-        <!-- <el-table-column prop="id" label="ID" width="80" align="center" /> -->
+        <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="username" :label="t('user.username')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="nickname" :label="t('user.nickname')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="email" :label="t('user.email')" min-width="160" show-overflow-tooltip />
@@ -101,17 +105,12 @@
       </el-table>
 
       <!-- 分页 -->
-      <div class="mt-4 flex justify-end">
-        <el-pagination
-          v-model:current-page="queryParams.page"
-          v-model:page-size="queryParams.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <Pagination
+        v-model:page="queryParams.page"
+        v-model:page-size="queryParams.pageSize"
+        :total="total"
+        @change="fetchData"
+      />
     </el-card>
 
     <!-- 用户表单弹窗 -->
@@ -157,6 +156,7 @@ import { Search, Refresh, Plus, Edit, Delete, Key } from '@element-plus/icons-vu
 import { getUserList, deleteUser, changeUserStatus, resetUserPassword } from '@/api/system'
 import type { UserItem, UserListParams } from '@/types/api'
 import UserForm from './components/UserForm.vue'
+import Pagination from '@/components/Pagination.vue'
 
 defineOptions({ name: 'UserManagement' })
 
@@ -174,6 +174,9 @@ const queryParams = reactive<UserListParams>({
 const loading = ref(false)
 const tableData = ref<UserItem[]>([])
 const total = ref(0)
+
+// 多选相关
+const selectedIds = ref<number[]>([])
 
 // 表单相关
 const formVisible = ref(false)
@@ -223,15 +226,9 @@ function handleReset() {
   fetchData()
 }
 
-/** 分页大小变化 */
-function handleSizeChange() {
-  queryParams.page = 1
-  fetchData()
-}
-
-/** 页码变化 */
-function handleCurrentChange() {
-  fetchData()
+/** 多选变化 */
+function handleSelectionChange(rows: UserItem[]) {
+  selectedIds.value = rows.map(row => row.id)
 }
 
 /** 新增 */
@@ -256,6 +253,24 @@ async function handleDelete(row: UserItem) {
     })
     await deleteUser(row.id)
     ElMessage.success(t('common.success'))
+    fetchData()
+  } catch {
+    // 取消或失败
+  }
+}
+
+/** 批量删除 */
+async function handleBatchDelete() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning(t('user.selectAtLeastOne'))
+    return
+  }
+  try {
+    await ElMessageBox.confirm(t('user.confirmBatchDelete'), t('common.tip'), {
+      type: 'warning',
+    })
+    await deleteUser(selectedIds.value)
+    ElMessage.success(t('user.batchDeleteSuccess'))
     fetchData()
   } catch {
     // 取消或失败

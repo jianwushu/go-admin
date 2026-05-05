@@ -146,26 +146,36 @@ func (s *UserService) Update(req request.UserUpdateRequest) error {
 	return nil
 }
 
-// Delete 删除用户
-func (s *UserService) Delete(id int64) error {
-	// 检查用户是否存在
-	_, err := s.userRepo.FindByID(id)
-	if err != nil {
-		return errors.New("用户不存在")
+// Delete 删除用户（支持单个或多个ID）
+func (s *UserService) Delete(ids []int64) error {
+	if len(ids) == 0 {
+		return errors.New("用户ID列表不能为空")
 	}
 
-	// 不允许删除超级管理员
-	if id == 1 {
-		return errors.New("不允许删除超级管理员")
+	// 检查是否包含超级管理员
+	for _, id := range ids {
+		if id == 1 {
+			return errors.New("不允许删除超级管理员")
+		}
+	}
+
+	// 检查用户是否存在
+	for _, id := range ids {
+		_, err := s.userRepo.FindByID(id)
+		if err != nil {
+			return fmt.Errorf("用户ID %d 不存在", id)
+		}
 	}
 
 	// 删除用户
-	if err := s.userRepo.Delete(id); err != nil {
+	if err := s.userRepo.Delete(ids); err != nil {
 		return errors.New("删除用户失败：" + err.Error())
 	}
 
 	// 清除用户角色关联
-	_ = s.userRepo.SetUserRoles(id, nil)
+	for _, id := range ids {
+		_ = s.userRepo.SetUserRoles(id, nil)
+	}
 
 	return nil
 }

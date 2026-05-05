@@ -32,6 +32,9 @@ export default {
     resetPasswordSuccess: '密码重置成功',
     enabled: '正常',
     disabled: '禁用',
+    confirmBatchDelete: '确定要批量删除选中的用户吗？',
+    batchDeleteSuccess: '批量删除成功',
+    selectAtLeastOne: '请至少选择一条记录',
   },
   role: {
     title: '角色管理',
