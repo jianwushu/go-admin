@@ -47,3 +47,17 @@ type UserChangeStatusRequest struct {
 	ID     int64 `json:"id" binding:"required"`      // 用户ID
 	Status int   `json:"status" binding:"oneof=0 1"` // 状态：0=禁用 1=正常
 }
+
+// UserProfileUpdateRequest 个人资料更新请求
+type UserProfileUpdateRequest struct {
+	Nickname string `json:"nickname" binding:"max=64"`               // 昵称
+	Email    string `json:"email" binding:"omitempty,email,max=128"` // 邮箱
+	Phone    string `json:"phone" binding:"omitempty,max=20"`        // 手机号
+	Avatar   string `json:"avatar" binding:"max=256"`                // 头像
+}
+
+// ChangePasswordRequest 修改密码请求
+type ChangePasswordRequest struct {
+	OldPassword string `json:"oldPassword" binding:"required,min=6,max=128"` // 旧密码
+	NewPassword string `json:"newPassword" binding:"required,min=6,max=128"` // 新密码
+}

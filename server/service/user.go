@@ -206,6 +206,82 @@ func (s *UserService) ChangeStatus(req request.UserChangeStatusRequest) error {
 	return nil
 }
 
+// GetProfile 获取当前用户的个人资料
+func (s *UserService) GetProfile(userID int64) (*response.UserProfileResponse, error) {
+	user, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return nil, errors.New("用户不存在")
+	}
+
+	profile := &response.UserProfileResponse{
+		ID:        user.ID,
+		Username:  user.Username,
+		Nickname:  user.Nickname,
+		Email:     user.Email,
+		Phone:     user.Phone,
+		Avatar:    user.Avatar,
+		DeptID:    user.DeptID,
+		Remark:    user.Remark,
+		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+	}
+
+	// 查询部门名称
+	if user.DeptID > 0 {
+		deptRepo := repository.NewDeptRepository()
+		dept, err := deptRepo.FindByID(user.DeptID)
+		if err == nil {
+			profile.DeptName = dept.Name
+		}
+	}
+
+	return profile, nil
+}
+
+// UpdateProfile 更新当前用户的个人资料
+func (s *UserService) UpdateProfile(userID int64, req request.UserProfileUpdateRequest) error {
+	user, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return errors.New("用户不存在")
+	}
+
+	user.Nickname = req.Nickname
+	user.Email = req.Email
+	user.Phone = req.Phone
+	user.Avatar = req.Avatar
+
+	if err := s.userRepo.Update(user); err != nil {
+		return errors.New("更新个人资料失败：" + err.Error())
+	}
+
+	return nil
+}
+
+// ChangePassword 修改当前用户的密码
+func (s *UserService) ChangePassword(userID int64, req request.ChangePasswordRequest) error {
+	user, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return errors.New("用户不存在")
+	}
+
+	// 验证旧密码
+	if !utils.BcryptCheck(req.OldPassword, user.Password) {
+		return errors.New("旧密码错误")
+	}
+
+	// 加密新密码
+	hashedPassword, err := utils.BcryptHash(req.NewPassword)
+	if err != nil {
+		return errors.New("密码加密失败")
+	}
+
+	// 更新密码
+	if err := s.userRepo.UpdatePassword(userID, hashedPassword); err != nil {
+		return errors.New("修改密码失败：" + err.Error())
+	}
+
+	return nil
+}
+
 // toUserResponse 将用户实体转换为响应结构
 func (s *UserService) toUserResponse(user *entity.User) *response.UserResponse {
 	resp := &response.UserResponse{

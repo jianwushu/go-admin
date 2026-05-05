@@ -66,4 +66,23 @@ export const staticRoutes: RouteRecordRaw[] = [
       hidden: true,
     },
   },
+  {
+    path: '/profile',
+    component: Layout,
+    meta: {
+      hidden: true,
+    },
+    children: [
+      {
+        path: '',
+        name: 'Profile',
+        component: () => import('@/views/profile/index.vue'),
+        meta: {
+          title: '个人中心',
+          i18nKey: 'menu.profile',
+          hidden: true,
+        },
+      },
+    ],
+  },
 ]

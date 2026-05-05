@@ -25,10 +25,14 @@ func InitAuthRouter(r *gin.RouterGroup) {
 	}
 
 	// 用户相关路由（需要认证）
+	userCtrl := controller.NewUserController()
 	userGroup := r.Group("/user")
 	userGroup.Use(middleware.Auth())
 	{
 		userGroup.GET("/info", authCtrl.GetUserInfo)
 		userGroup.GET("/menus", authCtrl.GetUserMenus)
+		userGroup.GET("/profile", userCtrl.GetProfile)
+		userGroup.PUT("/profile", userCtrl.UpdateProfile)
+		userGroup.PUT("/change-password", userCtrl.ChangePassword)
 	}
 }

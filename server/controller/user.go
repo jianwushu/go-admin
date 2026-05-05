@@ -203,3 +203,89 @@ func (ctrl *UserController) ChangeStatus(c *gin.Context) {
 
 	utils.SuccessWithMessage(c, "状态修改成功", nil)
 }
+
+// GetProfile 获取当前登录用户的个人资料
+// @Summary 获取个人资料
+// @Description 获取当前登录用户的个人资料信息
+// @Tags 个人中心
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} response.Response{data=response.UserProfileResponse}
+// @Router /api/v1/user/profile [get]
+func (ctrl *UserController) GetProfile(c *gin.Context) {
+	userID := middleware.GetCurrentUserID(c)
+	if userID == 0 {
+		utils.Fail(c, 401, "未登录")
+		return
+	}
+
+	profile, err := ctrl.userService.GetProfile(userID)
+	if err != nil {
+		utils.Fail(c, 500, err.Error())
+		return
+	}
+
+	utils.Success(c, profile)
+}
+
+// UpdateProfile 更新当前登录用户的个人资料
+// @Summary 更新个人资料
+// @Description 更新当前登录用户的昵称、邮箱、手机号、头像等信息
+// @Tags 个人中心
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body request.UserProfileUpdateRequest true "个人资料"
+// @Success 200 {object} response.Response
+// @Router /api/v1/user/profile [put]
+func (ctrl *UserController) UpdateProfile(c *gin.Context) {
+	userID := middleware.GetCurrentUserID(c)
+	if userID == 0 {
+		utils.Fail(c, 401, "未登录")
+		return
+	}
+
+	var req request.UserProfileUpdateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.Fail(c, 400, "参数错误："+err.Error())
+		return
+	}
+
+	if err := ctrl.userService.UpdateProfile(userID, req); err != nil {
+		utils.Fail(c, 500, err.Error())
+		return
+	}
+
+	utils.SuccessWithMessage(c, "更新成功", nil)
+}
+
+// ChangePassword 修改当前登录用户的密码
+// @Summary 修改密码
+// @Description 修改当前登录用户的密码，需要验证旧密码
+// @Tags 个人中心
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body request.ChangePasswordRequest true "密码参数"
+// @Success 200 {object} response.Response
+// @Router /api/v1/user/change-password [put]
+func (ctrl *UserController) ChangePassword(c *gin.Context) {
+	userID := middleware.GetCurrentUserID(c)
+	if userID == 0 {
+		utils.Fail(c, 401, "未登录")
+		return
+	}
+
+	var req request.ChangePasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.Fail(c, 400, "参数错误："+err.Error())
+		return
+	}
+
+	if err := ctrl.userService.ChangePassword(userID, req); err != nil {
+		utils.Fail(c, 500, err.Error())
+		return
+	}
+
+	utils.SuccessWithMessage(c, "密码修改成功", nil)
+}

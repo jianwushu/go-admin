@@ -8,6 +8,7 @@ import monitor from './modules/monitor'
 import operationLog from './modules/operationLog'
 import loginLog from './modules/loginLog'
 import codegen from './modules/codegen'
+import profile from './modules/profile'
 
 export default {
   ...common,
@@ -20,4 +21,5 @@ export default {
   ...operationLog,
   ...loginLog,
   ...codegen,
+  ...profile,
 }
