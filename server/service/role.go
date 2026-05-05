@@ -103,9 +103,19 @@ func (s *RoleService) Create(req request.RoleCreateRequest) error {
 		role.Status = 1
 	}
 
+	// admin 角色：代码层级全管理权限和全数据权限，无需维护关联关系
+	if req.Code == "admin" {
+		role.DataScope = 1 // 全部数据权限
+	}
+
 	// 创建角色
 	if err := s.roleRepo.Create(role); err != nil {
 		return errors.New("创建角色失败：" + err.Error())
+	}
+
+	// admin 角色无需维护角色菜单关联和角色部门关联（代码层级自动拥有全部权限）
+	if req.Code == "admin" {
+		return nil
 	}
 
 	// 设置角色菜单关联
@@ -145,13 +155,27 @@ func (s *RoleService) Update(req request.RoleUpdateRequest) error {
 	// 更新角色信息
 	role.Name = req.Name
 	role.Code = req.Code
-	role.DataScope = req.DataScope
 	role.Sort = req.Sort
 	role.Status = req.Status
 	role.Remark = req.Remark
 
+	// admin 角色：代码层级全管理权限和全数据权限，强制 DataScope=1
+	if role.Code == "admin" {
+		role.DataScope = 1
+	} else {
+		role.DataScope = req.DataScope
+	}
+
 	if err := s.roleRepo.Update(role); err != nil {
 		return errors.New("更新角色失败：" + err.Error())
+	}
+
+	// admin 角色无需维护角色菜单关联和角色部门关联（代码层级自动拥有全部权限）
+	if role.Code == "admin" {
+		// 清除可能存在的历史关联数据
+		_ = s.roleRepo.SetRoleMenus(role.ID, nil)
+		_ = s.roleRepo.SetRoleDepts(role.ID, nil)
+		return nil
 	}
 
 	// 更新角色菜单关联
@@ -238,6 +262,11 @@ func (s *RoleService) toRoleResponse(role *entity.Role) *response.RoleResponse {
 		Status:    role.Status,
 		Remark:    role.Remark,
 		CreatedAt: role.CreatedAt.Format("2006-01-02 15:04:05"),
+	}
+
+	// admin 角色：代码层级全管理权限和全数据权限，无需返回关联数据
+	if role.Code == "admin" {
+		return resp
 	}
 
 	// 查询角色菜单

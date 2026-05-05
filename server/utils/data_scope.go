@@ -18,11 +18,11 @@ const (
 
 // DataScopeInfo 数据权限信息
 type DataScopeInfo struct {
-	UserID    int64          // 用户ID
-	DeptID    int64          // 用户部门ID
-	DataScope int            // 数据权限范围（取最高权限）
-	RoleIDs   []int64        // 用户角色ID列表
-	Roles     []entity.Role  // 用户角色列表
+	UserID    int64         // 用户ID
+	DeptID    int64         // 用户部门ID
+	DataScope int           // 数据权限范围（取最高权限）
+	RoleIDs   []int64       // 用户角色ID列表
+	Roles     []entity.Role // 用户角色列表
 }
 
 // GetDataScopeInfo 获取用户数据权限信息
@@ -60,6 +60,12 @@ func GetDataScopeInfo(userID int64) *DataScopeInfo {
 		info.RoleIDs = append(info.RoleIDs, role.ID)
 	}
 
+	// 超级管理员拥有全部数据权限（代码层级全数据权限，无需维护角色数据权限关联）
+	if isAdminRole(info.RoleIDs) {
+		info.DataScope = DataScopeAll
+		return info
+	}
+
 	// 确定数据权限范围（取最小值，即最高权限）
 	// 1=全部 > 2=本部门 > 3=本部门及下级 > 4=仅本人 > 5=自定义
 	minScope := DataScopeCustom
@@ -71,6 +77,18 @@ func GetDataScopeInfo(userID int64) *DataScopeInfo {
 	info.DataScope = minScope
 
 	return info
+}
+
+// isAdminRole 检查角色列表中是否包含超级管理员角色
+func isAdminRole(roleIDs []int64) bool {
+	prefix := global.Config.TablePrefix
+
+	var count int64
+	err := global.DB.Table(prefix+"role").
+		Where("id IN ? AND code = ? AND status = 1 AND deleted_at IS NULL", roleIDs, "admin").
+		Count(&count).Error
+
+	return err == nil && count > 0
 }
 
 // ApplyDataScope 对 GORM 查询应用数据权限过滤

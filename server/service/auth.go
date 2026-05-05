@@ -335,7 +335,19 @@ func (s *AuthService) GetUserMenus(userID int64) ([]entity.Menu, error) {
 		return menus, nil
 	}
 
-	// 查询角色关联的菜单（type=0 目录, type=1 菜单，不含 type=2 按钮）
+	// 超级管理员拥有所有菜单（代码层级全管理权限，无需维护角色菜单关联）
+	if s.isAdminRole(roleIDs) {
+		err := global.DB.Table(prefix + "menu m").
+			Where("m.type IN (0, 1) AND m.status = 1 AND m.deleted_at IS NULL").
+			Order("m.sort ASC").
+			Find(&menus).Error
+		if err != nil {
+			return nil, err
+		}
+		return menus, nil
+	}
+
+	// 普通角色：查询角色关联的菜单（type=0 目录, type=1 菜单，不含 type=2 按钮）
 	err := global.DB.Table(prefix+"menu m").
 		Select("DISTINCT m.*").
 		Joins("JOIN "+prefix+"role_menu rm ON rm.menu_id = m.id").

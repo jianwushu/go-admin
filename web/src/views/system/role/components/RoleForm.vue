@@ -55,7 +55,7 @@
         </el-col>
       </el-row>
 
-      <el-form-item :label="t('role.dataScope')" prop="dataScope">
+      <el-form-item v-if="!isAdminRole" :label="t('role.dataScope')" prop="dataScope">
         <el-select v-model="formData.dataScope" :placeholder="t('role.dataScopeRequired')" style="width: 100%">
           <el-option :label="t('role.dataScopeAll')" :value="1" />
           <el-option :label="t('role.dataScopeDept')" :value="2" />
@@ -65,17 +65,19 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item :label="t('role.menus')" prop="menuIds">
-        <el-tree
-          ref="menuTreeRef"
-          :data="menuTreeData"
-          :props="{ label: 'name', children: 'children' }"
-          show-checkbox
-          node-key="id"
-          :default-checked-keys="formData.menuIds"
-          check-strictly
+      <el-form-item v-if="!isAdminRole" :label="t('role.menus')" prop="menuIds">
+        <el-cascader
+          ref="menuCascaderRef"
+          v-model="formData.menuIds"
+          :options="menuTreeData"
+          :props="menuCascaderProps"
+          :placeholder="t('role.selectMenus')"
+          collapse-tags
+          collapse-tags-tooltip
+          clearable
+          filterable
           v-loading="menuTreeLoading"
-          style="width: 100%; max-height: 300px; overflow-y: auto; border: 1px solid #dcdfe6; border-radius: 4px; padding: 8px"
+          style="width: 100%"
         >
           <template #default="{ node, data }">
             <div class="flex items-center gap-2">
@@ -97,10 +99,10 @@
               </el-tag>
             </div>
           </template>
-        </el-tree>
+        </el-cascader>
       </el-form-item>
 
-      <el-form-item v-if="formData.dataScope === 5" :label="t('role.depts')" prop="deptIds">
+      <el-form-item v-if="!isAdminRole && formData.dataScope === 5" :label="t('role.depts')" prop="deptIds">
         <el-select
           v-model="formData.deptIds"
           multiple
@@ -134,10 +136,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import type { ElTree } from 'element-plus'
+import type { CascaderInstance } from 'element-plus'
 import { Folder, Document, Operation } from '@element-plus/icons-vue'
 import { createRole, updateRole, getMenuTree } from '@/api/system'
 import type { RoleInfo, MenuItem } from '@/types/api'
@@ -156,12 +158,25 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const formRef = ref<FormInstance>()
-const menuTreeRef = ref<InstanceType<typeof ElTree>>()
+const menuCascaderRef = ref<CascaderInstance>()
 const submitLoading = ref(false)
+
+/** 是否为 admin 角色（code='admin'），admin 角色无需维护菜单和数据权限关联 */
+const isAdminRole = computed(() => formData.code === 'admin')
 
 /** 菜单树数据 */
 const menuTreeData = ref<MenuItem[]>([])
 const menuTreeLoading = ref(false)
+
+/** 级联选择器配置 */
+const menuCascaderProps = {
+  value: 'id',
+  label: 'name',
+  children: 'children',
+  multiple: true,
+  checkStrictly: false,
+  emitPath: false,
+}
 
 /** 获取菜单树数据 */
 async function fetchMenuTree() {
@@ -174,6 +189,58 @@ async function fetchMenuTree() {
   } finally {
     menuTreeLoading.value = false
   }
+}
+
+/**
+ * 根据选中的叶子节点 ID，递归收集所有需要提交的节点 ID（包括父节点）
+ * 级联选择器 checkStrictly=false 时 modelValue 只包含叶子节点，
+ * 但后端需要所有选中节点（含父节点），因此需要遍历树结构推导
+ */
+function collectAllCheckedIds(leafIds: number[], tree: MenuItem[]): number[] {
+  const resultSet = new Set<number>()
+  const leafIdSet = new Set(leafIds)
+
+  function walk(nodes: MenuItem[]): boolean {
+    let allChildrenChecked = true
+    let hasAnyChildChecked = false
+
+    for (const node of nodes) {
+      const children = node.children || []
+      let nodeChecked = false
+
+      if (children.length > 0) {
+        // 有子节点，递归处理
+        const childrenResult = walk(children)
+        if (childrenResult) {
+          // 子节点中有被选中的
+          hasAnyChildChecked = true
+          // 检查是否所有子节点都被选中
+          const allChecked = children.every(c => resultSet.has(c.id))
+          if (allChecked) {
+            resultSet.add(node.id)
+          } else {
+            allChildrenChecked = false
+          }
+        } else {
+          allChildrenChecked = false
+        }
+      } else {
+        // 叶子节点，检查是否在选中列表中
+        nodeChecked = leafIdSet.has(node.id)
+        if (nodeChecked) {
+          resultSet.add(node.id)
+          hasAnyChildChecked = true
+        } else {
+          allChildrenChecked = false
+        }
+      }
+    }
+
+    return hasAnyChildChecked
+  }
+
+  walk(tree)
+  return Array.from(resultSet)
 }
 
 /** 组件挂载时获取菜单树 */
@@ -241,10 +308,8 @@ async function handleSubmit() {
   const valid = await formRef.value?.validate().catch(() => false)
   if (!valid) return
 
-  // 获取选中的菜单ID
-  const checkedMenuIds = menuTreeRef.value?.getCheckedKeys(false) as number[] || []
-  const halfCheckedMenuIds = menuTreeRef.value?.getHalfCheckedKeys() as number[] || []
-  const allMenuIds = [...checkedMenuIds, ...halfCheckedMenuIds]
+  // 级联选择器只返回叶子节点 ID，需要推导出所有选中节点（含父节点）
+  const allMenuIds = collectAllCheckedIds(formData.menuIds, menuTreeData.value)
 
   submitLoading.value = true
   try {

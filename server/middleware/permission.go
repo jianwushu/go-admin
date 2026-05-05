@@ -87,7 +87,13 @@ func GetUserPermissions(userID int64) []string {
 		return perms
 	}
 
-	// 查询角色关联的菜单权限标识（只查按钮类型，type=2）
+	// 超级管理员拥有所有权限（代码层级全管理权限，无需维护角色菜单关联）
+	if isAdminRole(roleIDs) {
+		perms = append(perms, "*:*:*")
+		return perms
+	}
+
+	// 普通角色：查询角色关联的菜单权限标识（只查按钮类型，type=2）
 	global.DB.Table(prefix+"menu m").
 		Select("DISTINCT m.perms").
 		Joins("JOIN "+prefix+"role_menu rm ON rm.menu_id = m.id").
@@ -96,6 +102,18 @@ func GetUserPermissions(userID int64) []string {
 		Pluck("m.perms", &perms)
 
 	return perms
+}
+
+// isAdminRole 检查角色列表中是否包含超级管理员角色
+func isAdminRole(roleIDs []int64) bool {
+	prefix := global.Config.TablePrefix
+
+	var count int64
+	err := global.DB.Table(prefix+"role").
+		Where("id IN ? AND code = ? AND status = 1 AND deleted_at IS NULL", roleIDs, "admin").
+		Count(&count).Error
+
+	return err == nil && count > 0
 }
 
 // GetUserRoles 获取用户所有角色标识
