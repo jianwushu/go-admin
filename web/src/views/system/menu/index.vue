@@ -30,6 +30,7 @@
         style="width: 100%"
       >
         <el-table-column prop="name" :label="t('menu.name')" min-width="180" show-overflow-tooltip />
+        <el-table-column prop="i18nKey" :label="t('menu.i18nKey')" min-width="160" show-overflow-tooltip />
         <el-table-column prop="icon" :label="t('menu.icon')" width="80" align="center">
           <template #default="{ row }">
             <el-icon v-if="getIcon(row.icon)"><component :is="getIcon(row.icon)" /></el-icon>

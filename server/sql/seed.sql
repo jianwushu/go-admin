@@ -18,47 +18,47 @@ INSERT OR IGNORE INTO {{.TablePrefix}}user_role (user_id, role_id) VALUES (1, 1)
 
 -- 默认菜单
 -- 系统管理目录
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (1, 0, '系统管理', '/system', '', 'setting', 0, 1, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (1, 0, '系统管理', 'menu.system', '/system', '', 'setting', 0, 1, 1, 1, '');
 
 -- 用户管理菜单
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (2, 1, '用户管理', 'user', 'system/user/index', 'user', 1, 1, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (3, 2, '用户查询', '', '', '', 2, 0, 1, 1, 'system:user:list');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (4, 2, '用户新增', '', '', '', 2, 0, 1, 1, 'system:user:add');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (5, 2, '用户修改', '', '', '', 2, 0, 1, 1, 'system:user:edit');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (6, 2, '用户删除', '', '', '', 2, 0, 1, 1, 'system:user:delete');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (2, 1, '用户管理', 'menu.user', 'user', 'system/user/index', 'user', 1, 1, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (3, 2, '用户查询', 'menu.userQuery', '', '', '', 2, 0, 1, 1, 'system:user:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (4, 2, '用户新增', 'menu.userAdd', '', '', '', 2, 0, 1, 1, 'system:user:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (5, 2, '用户修改', 'menu.userEdit', '', '', '', 2, 0, 1, 1, 'system:user:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (6, 2, '用户删除', 'menu.userDelete', '', '', '', 2, 0, 1, 1, 'system:user:delete');
 
 -- 角色管理菜单
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (7, 1, '角色管理', 'role', 'system/role/index', 'peoples', 1, 2, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (8, 7, '角色查询', '', '', '', 2, 0, 1, 1, 'system:role:list');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (9, 7, '角色新增', '', '', '', 2, 0, 1, 1, 'system:role:add');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (10, 7, '角色修改', '', '', '', 2, 0, 1, 1, 'system:role:edit');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (11, 7, '角色删除', '', '', '', 2, 0, 1, 1, 'system:role:delete');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (7, 1, '角色管理', 'menu.role', 'role', 'system/role/index', 'peoples', 1, 2, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (8, 7, '角色查询', 'menu.roleQuery', '', '', '', 2, 0, 1, 1, 'system:role:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (9, 7, '角色新增', 'menu.roleAdd', '', '', '', 2, 0, 1, 1, 'system:role:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (10, 7, '角色修改', 'menu.roleEdit', '', '', '', 2, 0, 1, 1, 'system:role:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (11, 7, '角色删除', 'menu.roleDelete', '', '', '', 2, 0, 1, 1, 'system:role:delete');
 
 -- 菜单管理菜单
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (12, 1, '菜单管理', 'menu', 'system/menu/index', 'tree-table', 1, 3, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (13, 12, '菜单查询', '', '', '', 2, 0, 1, 1, 'system:menu:list');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (14, 12, '菜单新增', '', '', '', 2, 0, 1, 1, 'system:menu:add');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (15, 12, '菜单修改', '', '', '', 2, 0, 1, 1, 'system:menu:edit');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (16, 12, '菜单删除', '', '', '', 2, 0, 1, 1, 'system:menu:delete');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (12, 1, '菜单管理', 'menu.menu', 'menu', 'system/menu/index', 'tree-table', 1, 3, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (13, 12, '菜单查询', 'menu.menuQuery', '', '', '', 2, 0, 1, 1, 'system:menu:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (14, 12, '菜单新增', 'menu.menuAdd', '', '', '', 2, 0, 1, 1, 'system:menu:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (15, 12, '菜单修改', 'menu.menuEdit', '', '', '', 2, 0, 1, 1, 'system:menu:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (16, 12, '菜单删除', 'menu.menuDelete', '', '', '', 2, 0, 1, 1, 'system:menu:delete');
 
 -- 部门管理菜单
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (17, 1, '部门管理', 'dept', 'system/dept/index', 'tree', 1, 4, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (18, 17, '部门查询', '', '', '', 2, 0, 1, 1, 'system:dept:list');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (19, 17, '部门新增', '', '', '', 2, 0, 1, 1, 'system:dept:add');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (20, 17, '部门修改', '', '', '', 2, 0, 1, 1, 'system:dept:edit');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (21, 17, '部门删除', '', '', '', 2, 0, 1, 1, 'system:dept:delete');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (17, 1, '部门管理', 'menu.dept', 'dept', 'system/dept/index', 'tree', 1, 4, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (18, 17, '部门查询', 'menu.deptQuery', '', '', '', 2, 0, 1, 1, 'system:dept:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (19, 17, '部门新增', 'menu.deptAdd', '', '', '', 2, 0, 1, 1, 'system:dept:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (20, 17, '部门修改', 'menu.deptEdit', '', '', '', 2, 0, 1, 1, 'system:dept:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (21, 17, '部门删除', 'menu.deptDelete', '', '', '', 2, 0, 1, 1, 'system:dept:delete');
 
 -- 系统监控目录
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (22, 0, '系统监控', '/monitor', '', 'monitor', 0, 2, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (23, 22, '服务器监控', 'server', 'monitor/server/index', 'server', 1, 1, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (24, 22, '操作日志', 'operation-log', 'monitor/operation-log/index', 'form', 1, 2, 1, 1, '');
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (25, 22, '登录日志', 'login-log', 'monitor/login-log/index', 'logininfor', 1, 3, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (22, 0, '系统监控', 'menu.monitor', '/monitor', '', 'monitor', 0, 2, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (23, 22, '服务器监控', 'menu.server', 'server', 'monitor/server/index', 'server', 1, 1, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (24, 22, '操作日志', 'menu.operationLog', 'operation-log', 'monitor/operation-log/index', 'form', 1, 2, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (25, 22, '登录日志', 'menu.loginLog', 'login-log', 'monitor/login-log/index', 'logininfor', 1, 3, 1, 1, '');
 
 -- 系统工具目录
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (26, 0, '系统工具', '/tool', '', 'tool', 0, 3, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (26, 0, '系统工具', 'menu.tool', '/tool', '', 'tool', 0, 3, 1, 1, '');
 
 -- 代码生成菜单
-INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, path, component, icon, type, sort, visible, status, perms) VALUES (27, 26, '代码生成', 'codegen', 'tool/codegen/index', 'code', 1, 1, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (27, 26, '代码生成', 'menu.codegen', 'codegen', 'tool/codegen/index', 'code', 1, 1, 1, 1, '');
 
 -- 超级管理员角色拥有所有菜单权限
 INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 1);

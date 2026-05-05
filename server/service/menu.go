@@ -57,6 +57,7 @@ func (s *MenuService) Create(req request.MenuCreateRequest) error {
 	menu := &entity.Menu{
 		ParentID:  req.ParentID,
 		Name:      req.Name,
+		I18nKey:   req.I18nKey,
 		Path:      req.Path,
 		Component: req.Component,
 		Icon:      req.Icon,
@@ -115,6 +116,7 @@ func (s *MenuService) Update(req request.MenuUpdateRequest) error {
 	// 更新菜单信息
 	menu.ParentID = req.ParentID
 	menu.Name = req.Name
+	menu.I18nKey = req.I18nKey
 	menu.Path = req.Path
 	menu.Component = req.Component
 	menu.Icon = req.Icon
@@ -183,6 +185,7 @@ func (s *MenuService) buildTree(menus []entity.Menu, parentID int64) []response.
 				ID:        menu.ID,
 				ParentID:  menu.ParentID,
 				Name:      menu.Name,
+				I18nKey:   menu.I18nKey,
 				Path:      menu.Path,
 				Component: menu.Component,
 				Icon:      menu.Icon,
@@ -208,6 +211,7 @@ func (s *MenuService) toMenuResponse(menu *entity.Menu) *response.MenuResponse {
 		ID:        menu.ID,
 		ParentID:  menu.ParentID,
 		Name:      menu.Name,
+		I18nKey:   menu.I18nKey,
 		Path:      menu.Path,
 		Component: menu.Component,
 		Icon:      menu.Icon,

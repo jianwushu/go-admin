@@ -1,5 +1,4 @@
 import common from './common'
-import menu from './menu'
 import login from './modules/login'
 import layout from './modules/layout'
 import system from './modules/system'
@@ -12,7 +11,6 @@ import codegen from './modules/codegen'
 
 export default {
   ...common,
-  ...menu,
   ...login,
   ...layout,
   ...system,

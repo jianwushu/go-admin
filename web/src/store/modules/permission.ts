@@ -114,6 +114,7 @@ export const usePermissionStore = defineStore('permission', () => {
         component: resolveComponent(menu.component),
         meta: {
           title: menu.name,
+          i18nKey: menu.i18nKey || '',
           icon: menu.icon,
           hidden: menu.visible === 0,
           sort: menu.sort,

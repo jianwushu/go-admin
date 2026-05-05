@@ -31,10 +31,18 @@ const breadcrumbs = ref<RouteLocationMatched[]>([])
 
 /** 获取面包屑标题（处理国际化） */
 function getBreadcrumbTitle(item: RouteLocationMatched): string {
+  const i18nKey = item.meta?.i18nKey as string
   const title = item.meta?.title as string
+
+  console.log(item,i18nKey,1,title)
   if (!title) return ''
+  // 优先使用 i18nKey 翻译
+  if (i18nKey) {
+    const translated = t(i18nKey)
+    if (translated !== i18nKey) return translated
+  }
+  // 回退：尝试通过路由 name 翻译
   const name = typeof item.name === 'string' ? item.name : ''
-  // 尝试国际化翻译，如果没有对应 key 则返回原标题
   const translated = name ? t(`menu.${name}`, title) : title
   return translated !== `menu.${name}` ? translated : title
 }
@@ -48,7 +56,7 @@ function getBreadcrumbs() {
     matched.unshift({
       path: '/dashboard',
       name: 'Dashboard',
-      meta: { title: 'Dashboard' },
+      meta: { title: 'Dashboard', i18nKey: 'menu.dashboard' },
     } as RouteLocationMatched)
   }
   breadcrumbs.value = matched

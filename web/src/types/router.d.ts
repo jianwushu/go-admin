@@ -4,6 +4,8 @@ declare module 'vue-router' {
   interface RouteMeta {
     /** 菜单标题 */
     title?: string
+    /** 国际化翻译key */
+    i18nKey?: string
     /** 菜单图标 */
     icon?: string
     /** 是否隐藏 */

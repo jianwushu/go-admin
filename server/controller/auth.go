@@ -205,6 +205,7 @@ func buildMenuTree(menus []entity.Menu, parentID int64) []response.MenuResponse 
 				ID:        menu.ID,
 				ParentID:  menu.ParentID,
 				Name:      menu.Name,
+				I18nKey:   menu.I18nKey,
 				Path:      menu.Path,
 				Component: menu.Component,
 				Icon:      menu.Icon,

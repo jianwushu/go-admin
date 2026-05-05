@@ -162,6 +162,7 @@ async function handleLogout() {
   height: var(--navbar-height);
   padding: 0 16px;
   background: inherit;
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .navbar-left {

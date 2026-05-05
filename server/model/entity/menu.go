@@ -5,6 +5,7 @@ type Menu struct {
 	BaseModel
 	ParentID  int64  `json:"parentId" gorm:"default:0"`
 	Name      string `json:"name" gorm:"size:64;not null"`
+	I18nKey   string `json:"i18nKey" gorm:"size:128"` // 国际化翻译key
 	Path      string `json:"path" gorm:"size:128"`
 	Component string `json:"component" gorm:"size:128"`
 	Icon      string `json:"icon" gorm:"size:64"`

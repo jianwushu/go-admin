@@ -41,7 +41,8 @@ export const staticRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/dashboard/index.vue'),
         meta: {
           title: 'Dashboard',
-          icon: 'Odometer',
+          i18nKey: 'menu.dashboard',
+          icon: 'House',
           affix: true,
         },
       },

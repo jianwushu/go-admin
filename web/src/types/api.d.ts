@@ -79,6 +79,7 @@ export interface MenuItem {
   id: number
   parentId: number
   name: string
+  i18nKey: string
   path: string
   component: string
   icon: string
@@ -200,6 +201,7 @@ export interface MenuFormData {
   id?: number
   parentId: number
   name: string
+  i18nKey: string
   path: string
   component: string
   icon: string

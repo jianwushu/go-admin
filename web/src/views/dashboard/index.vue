@@ -322,6 +322,48 @@ onUnmounted(() => {
   max-width: 1400px;
 }
 
+/* 统一间距 */
+.section-spacing {
+  margin-bottom: 24px;
+}
+
+/* 欢迎横幅 - 白天模式 */
+.welcome-banner {
+  background: linear-gradient(135deg, #4096ff 0%, #1677ff 100%);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: 10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* 欢迎横幅 - 暗黑模式 */
+html.dark .welcome-banner {
+  background: linear-gradient(135deg, #173066 0%, #0f1d3d 100%);
+}
+
 .welcome-content {
   display: flex;
   justify-content: space-between;
@@ -336,12 +378,14 @@ onUnmounted(() => {
   color: #ffffff;
   margin: 0 0 8px 0;
   line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .welcome-desc {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.95);
   margin: 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .welcome-time {
@@ -349,8 +393,9 @@ onUnmounted(() => {
 }
 
 .welcome-time-text {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-size: 14px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 /* 统计网格 */

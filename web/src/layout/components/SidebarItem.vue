@@ -8,7 +8,7 @@
           <component :is="getIcon(onlyOneChild!.meta?.icon)" />
         </el-icon>
         <template #title>
-          <span>{{ onlyOneChild!.meta?.title }}</span>
+          <span>{{ getMenuTitle(onlyOneChild!) }}</span>
         </template>
       </el-menu-item>
     </template>
@@ -19,7 +19,7 @@
         <el-icon v-if="getIcon(item.meta?.icon)">
           <component :is="getIcon(item.meta?.icon)" />
         </el-icon>
-        <span>{{ item.meta?.title }}</span>
+        <span>{{ getMenuTitle(item) }}</span>
       </template>
 
       <SidebarItem
@@ -34,11 +34,24 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { RouteRecordRaw } from 'vue-router'
 import { isExternal } from '@/utils/validate'
 import { getIconComponent } from '@/utils/icon'
 
 defineOptions({ name: 'SidebarItem' })
+
+const { t } = useI18n()
+
+/** 获取菜单标题（优先使用 i18nKey 翻译） */
+function getMenuTitle(route: RouteRecordRaw): string {
+  const i18nKey = route.meta?.i18nKey as string
+  if (i18nKey) {
+    const translated = t(i18nKey)
+    if (translated !== i18nKey) return translated
+  }
+  return (route.meta?.title as string) || ''
+}
 
 const props = defineProps<{
   item: RouteRecordRaw

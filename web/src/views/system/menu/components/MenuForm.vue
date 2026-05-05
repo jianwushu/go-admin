@@ -43,6 +43,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item :label="t('menu.i18nKey')" prop="i18nKey">
+            <el-input
+              v-model="formData.i18nKey"
+              :placeholder="t('menu.i18nKeyPlaceholder')"
+              maxlength="128"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="12">
           <el-form-item :label="t('menu.sort')" prop="sort">
             <el-input-number
               v-model="formData.sort"
@@ -158,6 +170,7 @@ const formData = reactive<MenuFormData>({
   id: 0,
   parentId: 0,
   name: '',
+  i18nKey: '',
   path: '',
   component: '',
   icon: '',
@@ -186,6 +199,7 @@ watch(() => props.visible, (val) => {
       formData.id = props.data.id
       formData.parentId = props.data.parentId
       formData.name = props.data.name
+      formData.i18nKey = props.data.i18nKey || ''
       formData.path = props.data.path
       formData.component = props.data.component
       formData.icon = props.data.icon
@@ -199,6 +213,7 @@ watch(() => props.visible, (val) => {
       formData.id = 0
       formData.parentId = props.data?.id || 0
       formData.name = ''
+      formData.i18nKey = ''
       formData.path = ''
       formData.component = ''
       formData.icon = ''

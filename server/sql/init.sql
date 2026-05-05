@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS {{.TablePrefix}}menu (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     parent_id INTEGER DEFAULT 0,
     name VARCHAR(64) NOT NULL,
+    i18n_key VARCHAR(128) DEFAULT '',
     path VARCHAR(128),
     component VARCHAR(128),
     icon VARCHAR(64),

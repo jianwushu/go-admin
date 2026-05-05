@@ -9,7 +9,7 @@
         :class="{ active: isActive(tag) }"
         @contextmenu.prevent="openMenu(tag, $event)"
       >
-        {{ tag.title }}
+        {{ getTagTitle(tag) }}
         <el-icon
           v-if="!tag.meta?.affix"
           class="tags-view-close"
@@ -34,21 +34,52 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Close } from '@element-plus/icons-vue'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 import type { TagView } from '@/types/store'
+import type { RouteRecordRaw } from 'vue-router'
 
 defineOptions({ name: 'TagsView' })
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+
+/** 获取标签标题（优先使用 i18nKey 翻译） */
+function getTagTitle(tag: TagView): string {
+  const i18nKey = tag.meta?.i18nKey as string
+  if (i18nKey) {
+    const translated = t(i18nKey)
+    if (translated !== i18nKey) return translated
+  }
+  return tag.title
+}
 const tagsViewStore = useTagsViewStore()
 
 const visitedViews = computed(() => tagsViewStore.visitedViews)
+
+/** 初始化 affix 标签 */
+function initAffixTags() {
+  const routes = router.getRoutes()
+  routes.forEach((route) => {
+    if (route.meta?.affix) {
+      tagsViewStore.addVisitedView({
+        name: route.name as string,
+        path: route.path,
+        fullPath: route.path,
+        title: (route.meta?.title as string) || 'no-name',
+        meta: route.meta as any,
+      })
+    }
+  })
+}
+
+onMounted(() => {
+  initAffixTags()
+})
 
 const contextMenu = reactive({
   visible: false,
@@ -173,8 +204,16 @@ watch(
 .tags-view-wrapper {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   height: var(--tagsview-height);
   padding: 0 8px;
+  padding-top: 4px;
+}
+
+.tags-view-wrapper :deep(.el-scrollbar__view) {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .tags-view-item {

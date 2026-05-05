@@ -4,6 +4,7 @@ package request
 type MenuCreateRequest struct {
 	ParentID  int64  `json:"parentId"`                    // 父菜单ID
 	Name      string `json:"name" binding:"required,max=64"` // 路由名称
+	I18nKey   string `json:"i18nKey" binding:"max=128"`   // 国际化翻译key
 	Path      string `json:"path" binding:"max=128"`      // 路由路径
 	Component string `json:"component" binding:"max=128"` // 组件路径
 	Icon      string `json:"icon" binding:"max=64"`       // 图标
@@ -19,6 +20,7 @@ type MenuUpdateRequest struct {
 	ID        int64  `json:"id" binding:"required"`          // 菜单ID
 	ParentID  int64  `json:"parentId"`                       // 父菜单ID
 	Name      string `json:"name" binding:"required,max=64"` // 路由名称
+	I18nKey   string `json:"i18nKey" binding:"max=128"`     // 国际化翻译key
 	Path      string `json:"path" binding:"max=128"`        // 路由路径
 	Component string `json:"component" binding:"max=128"`   // 组件路径
 	Icon      string `json:"icon" binding:"max=64"`         // 图标
