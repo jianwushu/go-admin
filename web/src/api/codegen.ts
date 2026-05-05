@@ -19,6 +19,7 @@ export interface ColumnInfo {
   columnComment: string
   isPk: boolean
   isNull: boolean
+  maxLength: number
   columnDefault: string
   extra: string
 }
@@ -41,6 +42,7 @@ export interface ColumnConfig {
   comment: string
   isPk: boolean
   isNull: boolean
+  maxLength: number
   sort: number
 }
 
@@ -72,9 +74,16 @@ export interface CodegenPreviewRequest {
   fields: ColumnConfig[]
 }
 
+/** 代码文件 */
+export interface CodegenFile {
+  fileName: string
+  filePath: string
+  content: string
+}
+
 /** 代码预览响应 */
 export interface CodegenPreviewResponse {
-  [filename: string]: string
+  files: CodegenFile[]
 }
 
 // ==================== 代码生成 API ====================

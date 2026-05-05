@@ -24,6 +24,7 @@ type ColumnConfig struct {
 	Comment    string `json:"comment"`    // 字段注释
 	IsPk       bool   `json:"isPk"`       // 是否主键
 	IsNull     bool   `json:"isNull"`     // 是否可空
+	MaxLength  int    `json:"maxLength"`  // 最大长度（用于 VARCHAR）
 	Sort       int    `json:"sort"`       // 排序
 }
 

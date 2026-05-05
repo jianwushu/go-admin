@@ -258,7 +258,9 @@ func (s *CodegenService) renderAllTemplates(data TemplateData) ([]response.Codeg
 		switch tplName {
 		case "api.ts.tpl":
 			filePath = fmt.Sprintf(pathPattern, data.ModuleName, data.BusinessName)
-		case "index.vue.tpl", "form.vue.tpl":
+		case "index.vue.tpl":
+			filePath = fmt.Sprintf(pathPattern, data.ModuleName, data.BusinessName)
+		case "form.vue.tpl":
 			filePath = fmt.Sprintf(pathPattern, data.ModuleName, data.BusinessName, data.ClassName)
 		case "i18n-zh.ts.tpl", "i18n-en.ts.tpl":
 			filePath = fmt.Sprintf(pathPattern, data.BusinessName)
@@ -345,6 +347,7 @@ func toColumnConfigResponse(fields []request.ColumnConfig) []response.ColumnConf
 			Comment:    f.Comment,
 			IsPk:       f.IsPk,
 			IsNull:     f.IsNull,
+			MaxLength:  f.MaxLength,
 			Sort:       f.Sort,
 		})
 	}

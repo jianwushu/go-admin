@@ -5,6 +5,8 @@ import (
 	"go-admin/model/entity"
 	"go-admin/model/response"
 	"go-admin/utils"
+	"strconv"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -134,12 +136,27 @@ func (r *CodegenRepository) getSQLiteColumns(tableName string, columns *[]respon
 		}
 
 		goType := utils.MapSqliteTypeToGo(columnType)
+
+		// 从列类型中提取最大长度（如 VARCHAR(256) -> 256）
+		maxLength := 0
+		if strings.Contains(columnType, "(") && strings.Contains(columnType, ")") {
+			start := strings.Index(columnType, "(") + 1
+			end := strings.Index(columnType, ")")
+			if start < end {
+				lengthStr := columnType[start:end]
+				if length, err := strconv.Atoi(lengthStr); err == nil {
+					maxLength = length
+				}
+			}
+		}
+
 		col := response.ColumnInfoResponse{
 			ColumnName:    columnName,
 			ColumnType:    columnType,
 			ColumnComment: "",
 			IsPk:          pk == 1,
 			IsNull:        notNull == 0,
+			MaxLength:     maxLength,
 			GoType:        goType,
 			GoField:       utils.SnakeToCamel(columnName),
 			TsType:        utils.MapGoTypeToTs(goType),

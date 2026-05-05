@@ -79,5 +79,7 @@ export default {
     selectTableFirst: 'Please select a database table first',
     loadConfigSuccess: 'Config loaded successfully',
     loadConfigFail: 'Failed to load config, no saved config for this table',
+    fileList: 'File List',
+    selectFileToPreview: 'Select a file on the left to view code',
   },
 }

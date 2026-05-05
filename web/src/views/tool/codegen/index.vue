@@ -165,7 +165,7 @@ import {
   saveConfig,
   getConfig,
 } from '@/api/codegen'
-import type { TableInfo, ColumnConfig, CodegenPreviewResponse } from '@/api/codegen'
+import type { TableInfo, ColumnConfig } from '@/api/codegen'
 
 const { t } = useI18n()
 
@@ -177,7 +177,7 @@ const previewLoading = ref(false)
 const saveLoading = ref(false)
 const generateLoading = ref(false)
 
-const previewData = ref<CodegenPreviewResponse>({})
+const previewData = ref<Record<string, string>>({})
 
 /** 配置表单 */
 const configForm = reactive({
@@ -325,6 +325,7 @@ async function handleTableSelect(table: TableInfo) {
       comment: col.columnComment || '',
       isPk: col.isPk,
       isNull: col.isNull,
+      maxLength: col.maxLength || 0,
       sort: index,
     }))
     activeStep.value = 1
@@ -369,7 +370,13 @@ async function handlePreview() {
       author: configForm.author,
       fields: configForm.fields,
     })
-    previewData.value = res.data.data || {}
+    // 将后端返回的 files 数组转换为 { [filePath]: content } 格式，用 filePath 避免同名文件冲突
+    const files = res.data.data?.files || []
+    const previewMap: Record<string, string> = {}
+    for (const file of files) {
+      previewMap[file.filePath] = file.content
+    }
+    previewData.value = previewMap
   } catch (error) {
     console.error('代码预览失败:', error)
   } finally {

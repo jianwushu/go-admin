@@ -79,5 +79,7 @@ export default {
     selectTableFirst: '请先选择数据库表',
     loadConfigSuccess: '配置加载成功',
     loadConfigFail: '加载配置失败，该表暂无已保存的配置',
+    fileList: '文件列表',
+    selectFileToPreview: '请在左侧选择文件查看代码',
   },
 }
