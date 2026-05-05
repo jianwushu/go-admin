@@ -27,12 +27,18 @@ func NewUserService() *UserService {
 
 // GetList 获取用户列表（分页）
 func (s *UserService) GetList(req request.UserListRequest, scopeInfo *utils.DataScopeInfo) ([]response.UserResponse, int64, error) {
+	var status int
+	if req.Status != nil {
+		status = *req.Status
+	} else {
+		status = -1 // -1 表示不筛选状态
+	}
 	users, total, err := s.userRepo.FindWithPage(
 		req.GetPage(),
 		req.GetPageSize(),
 		scopeInfo,
 		req.Username,
-		req.Status,
+		status,
 		req.DeptID,
 	)
 	if err != nil {

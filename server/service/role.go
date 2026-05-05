@@ -24,12 +24,18 @@ func NewRoleService() *RoleService {
 
 // GetList 获取角色列表（分页）
 func (s *RoleService) GetList(req request.RoleListRequest) ([]response.RoleResponse, int64, error) {
+	var status int
+	if req.Status != nil {
+		status = *req.Status
+	} else {
+		status = -1 // -1 表示不筛选状态
+	}
 	roles, total, err := s.roleRepo.FindWithPage(
 		req.GetPage(),
 		req.GetPageSize(),
 		req.Name,
 		req.Code,
-		req.Status,
+		status,
 	)
 	if err != nil {
 		return nil, 0, err

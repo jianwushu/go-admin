@@ -60,9 +60,10 @@ func (r *RoleRepository) FindWithPage(page, pageSize int, name string, code stri
 	if code != "" {
 		query = query.Where("code LIKE ?", "%"+code+"%")
 	}
-	if status > 0 {
+	if status == 0 || status == 1 {
 		query = query.Where("status = ?", status)
 	}
+	// status 为 -1 时不筛选状态
 
 	// 统计总数
 	if err := query.Count(&total).Error; err != nil {

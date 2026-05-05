@@ -67,7 +67,7 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column prop="id" label="ID" width="70" align="center" />
+        <!-- <el-table-column prop="id" label="ID" width="70" align="center" /> -->
         <el-table-column prop="module" :label="t('operationLog.module')" min-width="100" show-overflow-tooltip />
         <el-table-column prop="action" :label="t('operationLog.action')" min-width="80" show-overflow-tooltip />
         <el-table-column :label="t('operationLog.method')" width="100" align="center">

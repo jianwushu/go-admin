@@ -62,7 +62,7 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column prop="id" label="ID" width="80" align="center" />
+        <!-- <el-table-column prop="id" label="ID" width="80" align="center" /> -->
         <el-table-column prop="name" :label="t('role.name')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="code" :label="t('role.code')" min-width="120" show-overflow-tooltip />
         <el-table-column :label="t('role.dataScope')" min-width="140" align="center">

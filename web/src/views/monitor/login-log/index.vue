@@ -59,7 +59,7 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column prop="id" label="ID" width="70" align="center" />
+        <!-- <el-table-column prop="id" label="ID" width="70" align="center" /> -->
         <el-table-column prop="username" :label="t('loginLog.username')" min-width="100" show-overflow-tooltip />
         <el-table-column prop="ip" :label="t('loginLog.ip')" width="140" show-overflow-tooltip />
         <el-table-column prop="location" :label="t('loginLog.location')" min-width="120" show-overflow-tooltip />

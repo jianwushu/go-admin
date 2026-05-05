@@ -4,7 +4,7 @@ package request
 type UserListRequest struct {
 	PageRequest
 	Username string `json:"username" form:"username"` // 用户名（模糊查询）
-	Status   int    `json:"status" form:"status"`     // 状态：0=禁用 1=正常
+	Status   *int   `json:"status" form:"status"`     // 状态：0=禁用 1=正常（指针类型，nil表示不筛选）
 	DeptID   int64  `json:"deptId" form:"deptId"`     // 部门ID
 	Phone    string `json:"phone" form:"phone"`       // 手机号（模糊查询）
 }
@@ -25,20 +25,20 @@ type UserCreateRequest struct {
 
 // UserUpdateRequest 更新用户请求
 type UserUpdateRequest struct {
-	ID       int64   `json:"id" binding:"required"`                     // 用户ID
-	Nickname string  `json:"nickname" binding:"max=64"`                 // 昵称
-	Email    string  `json:"email" binding:"omitempty,email,max=128"`   // 邮箱
-	Phone    string  `json:"phone" binding:"omitempty,max=20"`          // 手机号
-	Status   int     `json:"status" binding:"oneof=0 1"`                // 状态：0=禁用 1=正常
-	DeptID   int64   `json:"deptId"`                                    // 部门ID
-	Avatar   string  `json:"avatar" binding:"max=256"`                  // 头像
-	Remark   string  `json:"remark" binding:"max=512"`                  // 备注
-	RoleIDs  []int64 `json:"roleIds"`                                   // 角色ID列表
+	ID       int64   `json:"id" binding:"required"`                   // 用户ID
+	Nickname string  `json:"nickname" binding:"max=64"`               // 昵称
+	Email    string  `json:"email" binding:"omitempty,email,max=128"` // 邮箱
+	Phone    string  `json:"phone" binding:"omitempty,max=20"`        // 手机号
+	Status   int     `json:"status" binding:"oneof=0 1"`              // 状态：0=禁用 1=正常
+	DeptID   int64   `json:"deptId"`                                  // 部门ID
+	Avatar   string  `json:"avatar" binding:"max=256"`                // 头像
+	Remark   string  `json:"remark" binding:"max=512"`                // 备注
+	RoleIDs  []int64 `json:"roleIds"`                                 // 角色ID列表
 }
 
 // UserResetPasswordRequest 重置密码请求
 type UserResetPasswordRequest struct {
-	ID       int64  `json:"id" binding:"required"`              // 用户ID
+	ID       int64  `json:"id" binding:"required"`                     // 用户ID
 	Password string `json:"password" binding:"required,min=6,max=128"` // 新密码
 }
 

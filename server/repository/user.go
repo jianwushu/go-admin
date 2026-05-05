@@ -56,9 +56,10 @@ func (r *UserRepository) FindWithPage(page, pageSize int, scopeInfo *utils.DataS
 	if username != "" {
 		query = query.Where("username LIKE ?", "%"+username+"%")
 	}
-	if status > 0 {
+	if status == 0 || status == 1 {
 		query = query.Where("status = ?", status)
 	}
+	// status 为 -1 时不筛选状态
 	if deptID > 0 {
 		query = query.Where("dept_id = ?", deptID)
 	}

@@ -53,7 +53,7 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column prop="id" label="ID" width="80" align="center" />
+        <!-- <el-table-column prop="id" label="ID" width="80" align="center" /> -->
         <el-table-column prop="username" :label="t('user.username')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="nickname" :label="t('user.nickname')" min-width="120" show-overflow-tooltip />
         <el-table-column prop="email" :label="t('user.email')" min-width="160" show-overflow-tooltip />
