@@ -135,9 +135,9 @@ html.dark .fixed-header {
   }
 }
 
-/* 平板端布局适配 */
+/* 平板端布局适配：跟随侧边栏折叠状态 */
 @media screen and (min-width: 769px) and (max-width: 992px) {
-  .main-container {
+  .sidebar-collapsed .main-container {
     margin-left: var(--sidebar-collapsed-width) !important;
   }
 }

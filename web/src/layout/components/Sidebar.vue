@@ -49,18 +49,20 @@ const logo = ''
 
 /** 是否折叠（移动端或平板端或手动折叠） */
 const isCollapsed = computed(() => {
-  // 移动端始终折叠（隐藏侧边栏）
-  if (appStore.device === 'mobile') return true
-  // 平板端始终以图标模式显示
-  if (appStore.device === 'tablet') return true
+  // 移动端：打开时展开菜单显示完整内容，关闭时隐藏整个侧边栏
+  if (appStore.device === 'mobile') return false
+  // 平板端：根据用户操作切换折叠/展开
+  if (appStore.device === 'tablet') return !appStore.sidebar.opened
   // PC端根据用户操作
   return !appStore.sidebar.opened
 })
 
 /** 是否显示 Logo 标题 */
 const showLogoTitle = computed(() => {
-  if (appStore.device === 'mobile') return false
-  if (appStore.device === 'tablet') return false
+  // 移动端：打开侧边栏时显示标题
+  if (appStore.device === 'mobile') return appStore.sidebar.opened
+  // 平板端：展开时显示标题
+  if (appStore.device === 'tablet') return appStore.sidebar.opened
   return appStore.sidebar.opened
 })
 
@@ -116,8 +118,12 @@ const menuRoutes = computed(() => {
   transform: translateX(-100%);
 }
 
-/* 平板端：固定图标模式 */
+/* 平板端：跟随折叠状态 */
 .sidebar-container.is-tablet {
+  width: var(--sidebar-width);
+}
+
+.sidebar-container.is-tablet.is-collapse {
   width: var(--sidebar-collapsed-width);
 }
 
@@ -180,8 +186,30 @@ const menuRoutes = computed(() => {
   background-color: var(--sidebar-hover-bg) !important;
 }
 
+/* 折叠状态下菜单项悬停效果（覆盖 Element Plus 默认样式） */
+:deep(.el-menu--collapse .el-menu-item:hover),
+:deep(.el-menu--collapse .el-sub-menu__title:hover) {
+  background-color: var(--sidebar-hover-bg) !important;
+}
+
 /* 激活菜单项 */
 :deep(.el-menu-item.is-active) {
+  background-color: var(--sidebar-active-bg) !important;
+}
+</style>
+
+<!-- 全局样式：覆盖 Element Plus 折叠菜单弹出层的背景色 -->
+<style>
+.el-menu--popup {
+  background-color: var(--sidebar-bg) !important;
+}
+
+.el-menu--popup .el-menu-item:hover,
+.el-menu--popup .el-sub-menu__title:hover {
+  background-color: var(--sidebar-hover-bg) !important;
+}
+
+.el-menu--popup .el-menu-item.is-active {
   background-color: var(--sidebar-active-bg) !important;
 }
 </style>
