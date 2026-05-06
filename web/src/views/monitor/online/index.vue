@@ -1,7 +1,14 @@
 <template>
-  <div style="padding: 16px;">
+  <div class="online-user-container">
+    <!-- 页面标题 -->
+    <div class="page-header section-spacing">
+      <div class="page-header-content">
+        <h1 class="page-title">{{ t('monitor.onlineUserTitle') }}</h1>
+      </div>
+    </div>
+
     <!-- 查询栏 -->
-    <el-card shadow="never" style="margin-bottom: 16px;">
+    <div class="content-section section-spacing">
       <el-form :model="queryParams" inline>
         <el-form-item :label="t('monitor.username')">
           <el-input
@@ -14,31 +21,28 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">
-            <el-icon style="margin-right: 4px;"><Search /></el-icon>
+            <el-icon class="mr-1"><Search /></el-icon>
             {{ t('common.search') }}
           </el-button>
           <el-button @click="handleReset">
-            <el-icon style="margin-right: 4px;"><Refresh /></el-icon>
+            <el-icon class="mr-1"><Refresh /></el-icon>
             {{ t('common.reset') }}
           </el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
 
     <!-- 表格区域 -->
-    <el-card shadow="never" body-style="padding: 20px;">
-      <!-- 表格工具栏 -->
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <span style="font-weight: 500; font-size: 18px;">{{ t('monitor.onlineUserTitle') }}</span>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <el-button @click="fetchData">
-            <el-icon style="margin-right: 4px;"><Refresh /></el-icon>
-            {{ t('monitor.refresh') }}
-          </el-button>
-        </div>
+    <div class="content-section">
+      <!-- 工具栏 -->
+      <div class="table-toolbar">
+        <div></div>
+        <el-button @click="fetchData">
+          <el-icon class="mr-1"><Refresh /></el-icon>
+          {{ t('monitor.refresh') }}
+        </el-button>
       </div>
 
-      <!-- 表格主体 -->
       <el-table
         v-loading="loading"
         :data="tableData"
@@ -80,7 +84,7 @@
         v-if="!loading && tableData.length === 0"
         :description="t('monitor.noOnlineUser')"
       />
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -182,3 +186,56 @@ onUnmounted(() => {
   stopAutoRefresh()
 })
 </script>
+
+<style scoped>
+.online-user-container {
+  width: 100%;
+}
+
+/* 统一间距 */
+.section-spacing {
+  margin-bottom: 24px;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--el-text-color-primary);
+  margin: 0;
+}
+
+/* 内容区域 */
+.content-section {
+  background: var(--el-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02);
+  padding: 20px;
+}
+
+/* 查询栏表单垂直居中 */
+.content-section :deep(.el-form--inline) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 表格工具栏 */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+</style>

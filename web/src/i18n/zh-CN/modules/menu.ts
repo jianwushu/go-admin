@@ -23,6 +23,7 @@ export default {
     jobDelete: '任务删除',
     jobLog: '任务日志',
     systemConfig: '系统配置',
+    profile: '个人中心',
     configQuery: '配置查询',
     configEdit: '配置修改',
     announcement: '系统公告',

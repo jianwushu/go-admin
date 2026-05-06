@@ -23,6 +23,7 @@ export default {
     jobDelete: 'Task Delete',
     jobLog: 'Task Log',
     systemConfig: 'System Config',
+    profile: 'Profile',
     configQuery: 'Config Query',
     configEdit: 'Config Edit',
     announcement: 'Announcements',

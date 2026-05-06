@@ -1,24 +1,24 @@
 <template>
-  <div class="p-4">
-    <!-- 操作栏 -->
-    <el-card shadow="never">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-medium">{{ t('menu.title') }}</span>
-          <div>
-            <el-button type="primary" v-permission="'system:menu:add'" @click="handleAdd()">
-              <el-icon class="mr-1"><Plus /></el-icon>
-              {{ t('common.add') }}
-            </el-button>
-            <el-button @click="toggleExpand">
-              <el-icon class="mr-1"><Sort /></el-icon>
-              {{ isExpand ? t('common.collapse') : t('common.expand') }}
-            </el-button>
-          </div>
+  <div class="menu-container">
+    <!-- 页面标题和操作栏 -->
+    <div class="page-header section-spacing">
+      <div class="page-header-content">
+        <h1 class="page-title">{{ t('menu.title') }}</h1>
+        <div class="page-actions">
+          <el-button type="primary" v-permission="'system:menu:add'" @click="handleAdd()">
+            <el-icon class="mr-1"><Plus /></el-icon>
+            {{ t('common.add') }}
+          </el-button>
+          <el-button @click="toggleExpand">
+            <el-icon class="mr-1"><Sort /></el-icon>
+            {{ isExpand ? t('common.collapse') : t('common.expand') }}
+          </el-button>
         </div>
-      </template>
+      </div>
+    </div>
 
-      <!-- 树形表格 -->
+    <!-- 树形表格 -->
+    <div class="content-section">
       <el-table
         v-if="refreshTable"
         v-loading="loading"
@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
     <!-- 菜单表单弹窗 -->
     <MenuForm
@@ -172,3 +172,46 @@ onMounted(() => {
   fetchData()
 })
 </script>
+
+<style scoped>
+.menu-container {
+  width: 100%;
+}
+
+/* 统一间距 */
+.section-spacing {
+  margin-bottom: 24px;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--el-text-color-primary);
+  margin: 0;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 内容区域 */
+.content-section {
+  background: var(--el-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02);
+  padding: 20px;
+}
+</style>
