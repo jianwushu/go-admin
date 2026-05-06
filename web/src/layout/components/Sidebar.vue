@@ -4,7 +4,7 @@
     <div class="sidebar-logo">
       <router-link to="/" class="sidebar-logo-link">
         <img v-if="logo" :src="logo" class="sidebar-logo-img" alt="Logo" />
-        <h1 v-show="showLogoTitle" class="sidebar-logo-title">Go-Admin</h1>
+        <h1 v-show="showLogoTitle" class="sidebar-logo-title">{{ configStore.systemTitle }}</h1>
       </router-link>
     </div>
 
@@ -37,6 +37,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
+import { useConfigStore } from '@/store/modules/config'
 import SidebarItem from './SidebarItem.vue'
 
 defineOptions({ name: 'Sidebar' })
@@ -54,8 +55,9 @@ const props = withDefaults(defineProps<{
 const route = useRoute()
 const appStore = useAppStore()
 const permissionStore = usePermissionStore()
+const configStore = useConfigStore()
 
-const logo = ''
+const logo = computed(() => configStore.systemLogo || '')
 
 /** 是否折叠（移动端或平板端或手动折叠） */
 const isCollapsed = computed(() => {

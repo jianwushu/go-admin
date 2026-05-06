@@ -1,6 +1,6 @@
 export default {
   dashboard: {
-    welcome: '欢迎使用 Go-Admin 管理系统',
+    welcome: '欢迎使用 {title} 管理系统',
     welcomeDesc: '这是一个基于 Go + Vue3 的后台管理系统',
     quickEntry: '快捷入口',
     systemOverview: '系统概况',

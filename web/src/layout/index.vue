@@ -34,9 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store/modules/app'
+import { useConfigStore } from '@/store/modules/config'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import Sidebar from './components/Sidebar.vue'
 import Navbar from './components/Navbar.vue'
@@ -47,7 +48,13 @@ defineOptions({ name: 'Layout' })
 
 const route = useRoute()
 const appStore = useAppStore()
+const configStore = useConfigStore()
 const { device } = useBreakpoint()
+
+/** 初始化系统配置 */
+onMounted(() => {
+  configStore.loadConfig()
+})
 
 /** 有效的布局模式（移动端自动降级为侧边栏模式） */
 const effectiveLayoutMode = computed(() => {

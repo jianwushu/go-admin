@@ -16,7 +16,7 @@
       <!-- 顶部菜单模式：Logo + 水平菜单 -->
       <template v-else-if="effectiveLayoutMode === 'top'">
         <router-link to="/" class="navbar-logo">
-          <h1 class="navbar-logo-title">Go-Admin</h1>
+          <h1 class="navbar-logo-title">{{ configStore.systemTitle }}</h1>
         </router-link>
         <TopMenu />
       </template>
@@ -121,6 +121,7 @@ import { Fold, Expand, FullScreen, Moon, Sunny, ArrowDown, Setting } from '@elem
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
 import { usePermissionStore } from '@/store/modules/permission'
+import { useConfigStore } from '@/store/modules/config'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import TopMenu from './TopMenu.vue'
 import SettingsDrawer from './SettingsDrawer.vue'
@@ -132,6 +133,7 @@ const { t, locale } = useI18n()
 const appStore = useAppStore()
 const userStore = useUserStore()
 const permissionStore = usePermissionStore()
+const configStore = useConfigStore()
 
 /** 设置抽屉可见性 */
 const settingsVisible = ref(false)

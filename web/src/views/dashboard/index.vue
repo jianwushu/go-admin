@@ -4,7 +4,7 @@
     <div class="welcome-banner">
       <div class="welcome-content">
         <div class="welcome-text">
-          <h1 class="welcome-title">{{ t('dashboard.welcome') }}</h1>
+          <h1 class="welcome-title">{{ welcomeText }}</h1>
           <p class="welcome-desc">{{ t('dashboard.welcomeDesc') }}</p>
         </div>
         <div class="welcome-time">
@@ -121,8 +121,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, markRaw } from 'vue'
+import { ref, computed, onMounted, onUnmounted, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useConfigStore } from '@/store/modules/config'
 import {
   User,
   UserFilled,
@@ -143,6 +144,10 @@ import { getDashboardStats, type DashboardStats } from '@/api/dashboard'
 defineOptions({ name: 'Dashboard' })
 
 const { t, locale } = useI18n()
+const configStore = useConfigStore()
+
+/** 欢迎消息（带动态系统标题） */
+const welcomeText = computed(() => t('dashboard.welcome', { title: configStore.systemTitle }))
 
 // 当前时间
 const currentTime = ref('')

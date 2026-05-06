@@ -123,6 +123,52 @@ func (ctrl *SystemConfigController) GetByKeys(c *gin.Context) {
 	utils.Success(c, result)
 }
 
+// 允许公开访问的配置键白名单
+var publicConfigKeys = map[string]bool{
+	"system_title":     true,
+	"system_copyright": true,
+	"system_logo":      true,
+}
+
+// GetPublicByKeys 公开接口：批量获取指定配置（无需认证）
+// @Summary 公开批量获取配置
+// @Description 无需认证，仅返回系统标题、版权等公开配置
+// @Tags 系统配置（公开）
+// @Produce json
+// @Param keys query string true "配置键列表，逗号分隔"
+// @Success 200 {object} response.Response{data=map[string]string}
+// @Router /api/v1/system/config/public/keys [get]
+func (ctrl *SystemConfigController) GetPublicByKeys(c *gin.Context) {
+	keysStr := c.Query("keys")
+	if keysStr == "" {
+		utils.Fail(c, 400, "配置键不能为空")
+		return
+	}
+
+	keys := strings.Split(keysStr, ",")
+	// 过滤，只保留白名单中的键
+	var safeKeys []string
+	for _, k := range keys {
+		k = strings.TrimSpace(k)
+		if publicConfigKeys[k] {
+			safeKeys = append(safeKeys, k)
+		}
+	}
+
+	if len(safeKeys) == 0 {
+		utils.Success(c, map[string]string{})
+		return
+	}
+
+	result, err := ctrl.service.GetByKeys(safeKeys)
+	if err != nil {
+		utils.Fail(c, 500, "查询配置失败："+err.Error())
+		return
+	}
+
+	utils.Success(c, result)
+}
+
 // Update 更新单个配置
 // @Summary 更新系统配置
 // @Description 更新单个系统配置项

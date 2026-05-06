@@ -11,6 +11,13 @@ import (
 func InitSystemConfigRouter(r *gin.RouterGroup) {
 	configCtrl := controller.NewSystemConfigController()
 
+	// 公开接口（无需认证，用于登录页等场景获取系统配置）
+	publicGroup := r.Group("/system/config")
+	{
+		publicGroup.GET("/public/keys", configCtrl.GetPublicByKeys)
+	}
+
+	// 需要认证的接口
 	configGroup := r.Group("/system/config")
 	configGroup.Use(middleware.Auth())
 	{

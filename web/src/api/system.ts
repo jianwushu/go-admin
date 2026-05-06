@@ -133,6 +133,11 @@ export function deleteDept(id: number) {
 
 // ==================== 系统配置 API ====================
 
+/** 公开接口：批量获取系统配置（无需认证，用于登录页等场景） */
+export function getPublicSystemConfig(keys: string[]) {
+  return request.get<ApiResponse<Record<string, string>>>('/system/config/public/keys', { params: { keys: keys.join(',') } })
+}
+
 /** 获取所有系统配置 */
 export function getAllSystemConfig() {
   return request.get<ApiResponse<SystemConfigItem[]>>('/system/config/all')

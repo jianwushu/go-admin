@@ -11,7 +11,7 @@
     <div class="login-card">
       <!-- Logo 和标题 -->
       <div class="login-header">
-        <h1 class="login-title">Go-Admin</h1>
+        <h1 class="login-title">{{ configStore.systemTitle }}</h1>
         <p class="login-subtitle">{{ t('login.title') }}</p>
       </div>
 
@@ -71,13 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { User, Lock, Moon, Sunny } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 import { useAppStore } from '@/store/modules/app'
+import { useConfigStore } from '@/store/modules/config'
 import { login } from '@/api/auth'
 
 defineOptions({ name: 'Login' })
@@ -87,6 +88,12 @@ const route = useRoute()
 const { t } = useI18n()
 const userStore = useUserStore()
 const appStore = useAppStore()
+const configStore = useConfigStore()
+
+/** 页面加载时获取系统配置 */
+onMounted(() => {
+  configStore.loadConfig()
+})
 
 const formRef = ref<FormInstance>()
 const loading = ref(false)
