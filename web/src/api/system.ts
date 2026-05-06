@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { ApiResponse, PageResponse, UserItem, UserFormData, UserListParams, RoleInfo, RoleFormData, RoleListParams, MenuItem, MenuFormData, DeptInfo, DeptFormData } from '@/types/api'
+import type { ApiResponse, PageResponse, UserItem, UserFormData, UserListParams, RoleInfo, RoleFormData, RoleListParams, MenuItem, MenuFormData, DeptInfo, DeptFormData, SystemConfigItem, SystemConfigListParams, SystemConfigBatchUpdateItem } from '@/types/api'
 
 // ==================== 用户管理 API ====================
 
@@ -129,4 +129,45 @@ export function updateDept(data: DeptFormData) {
 /** 删除部门 */
 export function deleteDept(id: number) {
   return request.delete<ApiResponse<null>>(`/system/dept/${id}`)
+}
+
+// ==================== 系统配置 API ====================
+
+/** 获取所有系统配置 */
+export function getAllSystemConfig() {
+  return request.get<ApiResponse<SystemConfigItem[]>>('/system/config/all')
+}
+
+/** 获取系统配置列表（分页） */
+export function getSystemConfigList(params: SystemConfigListParams) {
+  return request.get<PageResponse<SystemConfigItem>>('/system/config/list', { params })
+}
+
+/** 根据键获取配置 */
+export function getSystemConfigByKey(key: string) {
+  return request.get<ApiResponse<SystemConfigItem>>(`/system/config/key/${key}`)
+}
+
+/** 批量获取配置 */
+export function getSystemConfigByKeys(keys: string[]) {
+  return request.get<ApiResponse<Record<string, string>>>('/system/config/keys', { params: { keys: keys.join(',') } })
+}
+
+/** 更新单个配置 */
+export function updateSystemConfig(id: number, configValue: string) {
+  return request.put<ApiResponse<null>>('/system/config', { id, configValue })
+}
+
+/** 批量更新配置 */
+export function batchUpdateSystemConfig(list: SystemConfigBatchUpdateItem[]) {
+  return request.put<ApiResponse<null>>('/system/config/batch', { list })
+}
+
+/** 上传Logo图片 */
+export function uploadSystemLogo(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  return request.post<ApiResponse<string>>('/system/config/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 }

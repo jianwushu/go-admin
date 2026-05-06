@@ -211,3 +211,26 @@ export interface MenuFormData {
   status: number
   perms: string
 }
+
+/** 系统配置项 */
+export interface SystemConfigItem {
+  id: number
+  configKey: string
+  configValue: string
+  configType: string
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+/** 系统配置 - 列表查询参数 */
+export interface SystemConfigListParams extends PageQuery {
+  configKey?: string
+  configType?: string
+}
+
+/** 系统配置 - 批量更新请求 */
+export interface SystemConfigBatchUpdateItem {
+  id: number
+  configValue: string
+}

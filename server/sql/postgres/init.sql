@@ -1,0 +1,255 @@
+-- go-admin 建表脚本 (PostgreSQL)
+-- 使用 Go text/template 渲染，变量 {{.TablePrefix}} 来自 config.yaml
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}user" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "username" VARCHAR(64) NOT NULL,
+    "password" VARCHAR(128) NOT NULL,
+    "nickname" VARCHAR(64),
+    "email" VARCHAR(128),
+    "phone" VARCHAR(20),
+    "status" INTEGER DEFAULT 1,
+    "dept_id" BIGINT,
+    "avatar" VARCHAR(256),
+    "remark" VARCHAR(512),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_username ON "{{.TablePrefix}}user"("username");
+CREATE INDEX IF NOT EXISTS idx_user_dept_id ON "{{.TablePrefix}}user"("dept_id");
+CREATE INDEX IF NOT EXISTS idx_user_deleted_at ON "{{.TablePrefix}}user"("deleted_at");
+
+-- 角色表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}role" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "name" VARCHAR(64) NOT NULL,
+    "code" VARCHAR(64) NOT NULL,
+    "data_scope" INTEGER DEFAULT 1,
+    "sort" INTEGER DEFAULT 0,
+    "status" INTEGER DEFAULT 1,
+    "remark" VARCHAR(512),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_role_code ON "{{.TablePrefix}}role"("code");
+CREATE INDEX IF NOT EXISTS idx_role_deleted_at ON "{{.TablePrefix}}role"("deleted_at");
+
+-- 菜单表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}menu" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "parent_id" BIGINT DEFAULT 0,
+    "name" VARCHAR(64) NOT NULL,
+    "i18n_key" VARCHAR(128) DEFAULT '',
+    "path" VARCHAR(128),
+    "component" VARCHAR(128),
+    "icon" VARCHAR(64),
+    "type" INTEGER,
+    "sort" INTEGER DEFAULT 0,
+    "visible" INTEGER DEFAULT 1,
+    "status" INTEGER DEFAULT 1,
+    "perms" VARCHAR(128),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_menu_deleted_at ON "{{.TablePrefix}}menu"("deleted_at");
+
+-- 部门表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}dept" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "parent_id" BIGINT DEFAULT 0,
+    "name" VARCHAR(64) NOT NULL,
+    "sort" INTEGER DEFAULT 0,
+    "status" INTEGER DEFAULT 1,
+    "leader" VARCHAR(64),
+    "phone" VARCHAR(20),
+    "email" VARCHAR(128),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_dept_deleted_at ON "{{.TablePrefix}}dept"("deleted_at");
+
+-- 用户角色关联表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}user_role" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "user_id" BIGINT NOT NULL,
+    "role_id" BIGINT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_role ON "{{.TablePrefix}}user_role"("user_id", "role_id");
+
+-- 角色菜单关联表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}role_menu" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "role_id" BIGINT NOT NULL,
+    "menu_id" BIGINT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_role_menu ON "{{.TablePrefix}}role_menu"("role_id", "menu_id");
+
+-- 角色部门关联表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}role_dept" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "role_id" BIGINT NOT NULL,
+    "dept_id" BIGINT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_role_dept ON "{{.TablePrefix}}role_dept"("role_id", "dept_id");
+
+-- 操作日志表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}operation_log" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "module" VARCHAR(64),
+    "action" VARCHAR(64),
+    "method" VARCHAR(10),
+    "url" VARCHAR(256),
+    "ip" VARCHAR(64),
+    "operator" VARCHAR(64),
+    "request_param" TEXT,
+    "response_data" TEXT,
+    "status" INTEGER,
+    "error_msg" VARCHAR(512),
+    "duration" INTEGER,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_oplog_created_at ON "{{.TablePrefix}}operation_log"("created_at");
+CREATE INDEX IF NOT EXISTS idx_oplog_operator ON "{{.TablePrefix}}operation_log"("operator");
+
+-- 登录日志表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}login_log" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "username" VARCHAR(64),
+    "ip" VARCHAR(64),
+    "location" VARCHAR(128),
+    "browser" VARCHAR(64),
+    "os" VARCHAR(64),
+    "status" INTEGER,
+    "msg" VARCHAR(256),
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_loginlog_created_at ON "{{.TablePrefix}}login_log"("created_at");
+CREATE INDEX IF NOT EXISTS idx_loginlog_username ON "{{.TablePrefix}}login_log"("username");
+
+-- 代码生成配置表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}codegen_config" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "table_name" VARCHAR(128) NOT NULL,
+    "table_comment" VARCHAR(256),
+    "class_name" VARCHAR(128) NOT NULL,
+    "business_name" VARCHAR(128) NOT NULL,
+    "function_name" VARCHAR(256),
+    "module_name" VARCHAR(64) NOT NULL,
+    "package_name" VARCHAR(128) NOT NULL,
+    "author" VARCHAR(64),
+    "fields" TEXT,
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_codegen_config_table_name ON "{{.TablePrefix}}codegen_config"("table_name");
+CREATE INDEX IF NOT EXISTS idx_codegen_config_deleted_at ON "{{.TablePrefix}}codegen_config"("deleted_at");
+
+-- ========== 第二阶段新增表 ==========
+
+-- 定时任务表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}job" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "name" VARCHAR(128) NOT NULL,
+    "job_type" INTEGER DEFAULT 1,
+    "cron_expr" VARCHAR(64) NOT NULL,
+    "func_name" VARCHAR(128),
+    "http_url" VARCHAR(512),
+    "http_method" VARCHAR(10) DEFAULT 'GET',
+    "http_body" TEXT,
+    "status" INTEGER DEFAULT 1,
+    "remark" VARCHAR(512),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_job_deleted_at ON "{{.TablePrefix}}job"("deleted_at");
+
+-- 定时任务执行日志表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}job_log" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "job_id" BIGINT NOT NULL,
+    "job_name" VARCHAR(128),
+    "status" INTEGER DEFAULT 1,
+    "result" TEXT,
+    "error_msg" TEXT,
+    "duration" INTEGER,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_job_log_job_id ON "{{.TablePrefix}}job_log"("job_id");
+CREATE INDEX IF NOT EXISTS idx_job_log_created_at ON "{{.TablePrefix}}job_log"("created_at");
+
+-- 系统配置表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}system_config" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "config_key" VARCHAR(128) NOT NULL,
+    "config_value" TEXT,
+    "config_type" VARCHAR(32) DEFAULT 'text',
+    "remark" VARCHAR(512),
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_system_config_key ON "{{.TablePrefix}}system_config"("config_key");
+
+-- 系统公告表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}announcement" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "title" VARCHAR(256) NOT NULL,
+    "content" TEXT,
+    "type" INTEGER DEFAULT 1,
+    "status" INTEGER DEFAULT 1,
+    "top" INTEGER DEFAULT 0,
+    "publish_by" BIGINT,
+    "publish_at" TIMESTAMP,
+    "created_by" BIGINT DEFAULT 0,
+    "updated_by" BIGINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_announcement_deleted_at ON "{{.TablePrefix}}announcement"("deleted_at");
+CREATE INDEX IF NOT EXISTS idx_announcement_status ON "{{.TablePrefix}}announcement"("status");
+
+-- 站内信消息表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}message" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "sender_id" BIGINT NOT NULL,
+    "title" VARCHAR(256),
+    "content" TEXT,
+    "msg_type" INTEGER DEFAULT 1,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_message_deleted_at ON "{{.TablePrefix}}message"("deleted_at");
+
+-- 站内信用户关联表
+CREATE TABLE IF NOT EXISTS "{{.TablePrefix}}message_user" (
+    "id" BIGSERIAL PRIMARY KEY,
+    "message_id" BIGINT NOT NULL,
+    "receiver_id" BIGINT NOT NULL,
+    "is_read" INTEGER DEFAULT 0,
+    "read_at" TIMESTAMP,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_message_user_receiver ON "{{.TablePrefix}}message_user"("receiver_id");
+CREATE INDEX IF NOT EXISTS idx_message_user_message ON "{{.TablePrefix}}message_user"("message_id");
+CREATE INDEX IF NOT EXISTS idx_message_user_read ON "{{.TablePrefix}}message_user"("receiver_id", "is_read");

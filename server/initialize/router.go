@@ -32,6 +32,7 @@ func Router() *gin.Engine {
 		router.InitOperationLogRouter(apiGroup)
 		router.InitLoginLogRouter(apiGroup)
 		router.InitCodegenRouter(apiGroup)
+		router.InitSystemConfigRouter(apiGroup)
 	}
 
 	return r

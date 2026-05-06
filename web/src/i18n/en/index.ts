@@ -9,6 +9,7 @@ import operationLog from './modules/operationLog'
 import loginLog from './modules/loginLog'
 import codegen from './modules/codegen'
 import profile from './modules/profile'
+import systemConfig from './modules/systemConfig'
 
 export default {
   ...common,
@@ -22,4 +23,5 @@ export default {
   ...loginLog,
   ...codegen,
   ...profile,
+  ...systemConfig,
 }
