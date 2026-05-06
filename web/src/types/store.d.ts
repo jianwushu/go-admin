@@ -1,3 +1,6 @@
+/** 布局模式 */
+export type LayoutMode = 'sidebar' | 'top' | 'mixed'
+
 /** 用户 Store 状态 */
 export interface UserState {
   token: string
@@ -17,6 +20,8 @@ export interface AppState {
   theme: 'light' | 'dark'
   language: string
   size: 'large' | 'default' | 'small'
+  layoutMode: LayoutMode
+  primaryColor: string
 }
 
 /** 权限 Store 状态 */

@@ -1,14 +1,36 @@
 <template>
   <div class="navbar">
-    <!-- 左侧：折叠按钮 + 面包屑 -->
+    <!-- 左侧区域：根据布局模式切换 -->
     <div class="navbar-left">
-      <div class="hamburger" @click="toggleSidebar">
-        <el-icon :size="20">
-          <Fold v-if="appStore.sidebar.opened" />
-          <Expand v-else />
-        </el-icon>
-      </div>
-      <Breadcrumb />
+      <!-- 侧边栏模式：折叠按钮 + 面包屑 -->
+      <template v-if="effectiveLayoutMode === 'sidebar'">
+        <div class="hamburger" @click="toggleSidebar">
+          <el-icon :size="20">
+            <Fold v-if="appStore.sidebar.opened" />
+            <Expand v-else />
+          </el-icon>
+        </div>
+        <Breadcrumb />
+      </template>
+
+      <!-- 顶部菜单模式：Logo + 水平菜单 -->
+      <template v-else-if="effectiveLayoutMode === 'top'">
+        <router-link to="/" class="navbar-logo">
+          <h1 class="navbar-logo-title">Go-Admin</h1>
+        </router-link>
+        <TopMenu />
+      </template>
+
+      <!-- 混合模式：折叠按钮 + 一级菜单（Logo 在侧边栏中显示） -->
+      <template v-else-if="effectiveLayoutMode === 'mixed'">
+        <div class="hamburger" @click="toggleSidebar">
+          <el-icon :size="20">
+            <Fold v-if="appStore.sidebar.opened" />
+            <Expand v-else />
+          </el-icon>
+        </div>
+        <TopMenu />
+      </template>
     </div>
 
     <!-- 右侧：功能区 -->
@@ -58,6 +80,15 @@
         </template>
       </el-dropdown>
 
+      <!-- 设置按钮 -->
+      <el-tooltip :content="t('navbar.settings')" placement="bottom">
+        <div class="navbar-action" @click="settingsVisible = true">
+          <el-icon :size="18">
+            <Setting />
+          </el-icon>
+        </div>
+      </el-tooltip>
+
       <!-- 用户信息 -->
       <el-dropdown trigger="click" @command="handleUserCommand">
         <div class="navbar-user">
@@ -75,18 +106,24 @@
         </template>
       </el-dropdown>
     </div>
+
+    <!-- 设置抽屉 -->
+    <SettingsDrawer v-model="settingsVisible" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox } from 'element-plus'
-import { Fold, Expand, FullScreen, Moon, Sunny, ArrowDown } from '@element-plus/icons-vue'
+import { Fold, Expand, FullScreen, Moon, Sunny, ArrowDown, Setting } from '@element-plus/icons-vue'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
 import { usePermissionStore } from '@/store/modules/permission'
 import Breadcrumb from '@/components/Breadcrumb.vue'
+import TopMenu from './TopMenu.vue'
+import SettingsDrawer from './SettingsDrawer.vue'
 
 defineOptions({ name: 'Navbar' })
 
@@ -95,6 +132,15 @@ const { t, locale } = useI18n()
 const appStore = useAppStore()
 const userStore = useUserStore()
 const permissionStore = usePermissionStore()
+
+/** 设置抽屉可见性 */
+const settingsVisible = ref(false)
+
+/** 有效的布局模式（移动端自动降级为侧边栏模式） */
+const effectiveLayoutMode = computed(() => {
+  if (appStore.device === 'mobile') return 'sidebar'
+  return appStore.layoutMode
+})
 
 /** 切换侧边栏 */
 function toggleSidebar() {
@@ -169,6 +215,8 @@ async function handleLogout() {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .hamburger {
@@ -184,10 +232,26 @@ async function handleLogout() {
   background: var(--el-fill-color);
 }
 
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navbar-logo-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  white-space: nowrap;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .navbar-action {

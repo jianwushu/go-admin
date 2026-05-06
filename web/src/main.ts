@@ -4,7 +4,7 @@ import router from './router'
 import pinia from './store'
 import i18n from './i18n'
 import { setupPermissionDirective } from './directives/permission'
-import { initTheme } from './utils/theme'
+import { initTheme, initPrimaryColor } from './utils/theme'
 
 // Element-Plus 样式
 import 'element-plus/dist/index.css'
@@ -16,6 +16,8 @@ import '@/assets/styles/index.css'
 
 // 初始化主题（必须在 DOM 渲染前执行）
 initTheme()
+// 初始化主题色
+initPrimaryColor()
 
 // 路由守卫
 import './router/guard'

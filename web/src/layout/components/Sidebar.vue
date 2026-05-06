@@ -22,7 +22,7 @@
         mode="vertical"
       >
         <SidebarItem
-          v-for="route in menuRoutes"
+          v-for="route in displayRoutes"
           :key="route.path"
           :item="route"
           :base-path="route.path"
@@ -40,6 +40,16 @@ import { usePermissionStore } from '@/store/modules/permission'
 import SidebarItem from './SidebarItem.vue'
 
 defineOptions({ name: 'Sidebar' })
+
+const props = withDefaults(defineProps<{
+  /** 是否为混合模式 */
+  mixedMode?: boolean
+  /** 混合模式下顶部激活的一级菜单路径 */
+  topActiveMenu?: string
+}>(), {
+  mixedMode: false,
+  topActiveMenu: '/',
+})
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -72,6 +82,7 @@ const sidebarClass = computed(() => ({
   'is-mobile': appStore.device === 'mobile',
   'is-tablet': appStore.device === 'tablet',
   'is-hidden': appStore.device === 'mobile' && !appStore.sidebar.opened,
+  'mixed-mode': props.mixedMode,
 }))
 
 /** 当前激活菜单 */
@@ -83,9 +94,35 @@ const activeMenu = computed(() => {
   return path
 })
 
-/** 菜单路由列表 */
+/** 菜单路由列表（过滤掉隐藏的路由） */
 const menuRoutes = computed(() => {
-  return permissionStore.routes.length > 0 ? permissionStore.routes : []
+  const routes = permissionStore.routes.length > 0 ? permissionStore.routes : []
+  return routes.filter((route) => !route.meta?.hidden)
+})
+
+/** 混合模式下：根据顶部激活菜单过滤子路由 */
+const mixedSubRoutes = computed(() => {
+  if (!props.topActiveMenu) return []
+
+  // 查找匹配的一级菜单
+  const topRoute = menuRoutes.value.find((r) => {
+    const path = r.path.startsWith('/') ? r.path : `/${r.path}`
+    return path === props.topActiveMenu
+  })
+
+  if (!topRoute) return []
+
+  // 返回该一级菜单的子菜单
+  const children = (topRoute.children || []).filter((child) => !child.meta?.hidden)
+  return children.length > 0 ? children : [topRoute]
+})
+
+/** 实际显示的路由列表 */
+const displayRoutes = computed(() => {
+  if (props.mixedMode) {
+    return mixedSubRoutes.value
+  }
+  return menuRoutes.value
 })
 </script>
 
@@ -127,6 +164,8 @@ const menuRoutes = computed(() => {
   width: var(--sidebar-collapsed-width);
 }
 
+/* 混合模式：侧边栏从顶部开始，包含 Logo */
+
 .sidebar-logo {
   display: flex;
   align-items: center;
@@ -166,6 +205,10 @@ const menuRoutes = computed(() => {
 
 :deep(.el-scrollbar) {
   height: calc(100% - 50px);
+}
+
+.mixed-mode :deep(.el-scrollbar) {
+  height: 100%;
 }
 
 :deep(.scrollbar-wrapper) {

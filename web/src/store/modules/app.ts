@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
-import { getThemeMode, setThemeMode, type ThemeMode } from '@/utils/theme'
+import { getThemeMode, setThemeMode, type ThemeMode, getPrimaryColor, applyPrimaryColor } from '@/utils/theme'
+import type { LayoutMode } from '@/types/store'
 
 export const useAppStore = defineStore('app', () => {
   const sidebar = reactive({
@@ -14,6 +15,14 @@ export const useAppStore = defineStore('app', () => {
   const size = ref<'large' | 'default' | 'small'>(
     (localStorage.getItem('size') as 'large' | 'default' | 'small') || 'default'
   )
+
+  /** 布局模式 */
+  const layoutMode = ref<LayoutMode>(
+    (localStorage.getItem('layoutMode') as LayoutMode) || 'sidebar'
+  )
+
+  /** 主题色 */
+  const primaryColor = ref<string>(getPrimaryColor())
 
   /** 切换侧边栏 */
   function toggleSidebar() {
@@ -59,12 +68,32 @@ export const useAppStore = defineStore('app', () => {
     localStorage.setItem('size', s)
   }
 
+  /** 设置布局模式 */
+  function setLayoutMode(mode: LayoutMode) {
+    layoutMode.value = mode
+    localStorage.setItem('layoutMode', mode)
+    // 移动端自动降级为侧边栏模式
+    if (device.value === 'mobile' && mode !== 'sidebar') {
+      layoutMode.value = 'sidebar'
+      localStorage.setItem('layoutMode', 'sidebar')
+    }
+  }
+
+  /** 设置主题色 */
+  function setColor(color: string) {
+    primaryColor.value = color
+    localStorage.setItem('primaryColor', color)
+    applyPrimaryColor(color)
+  }
+
   return {
     sidebar,
     device,
     theme,
     language,
     size,
+    layoutMode,
+    primaryColor,
     toggleSidebar,
     closeSidebar,
     toggleDevice,
@@ -72,5 +101,7 @@ export const useAppStore = defineStore('app', () => {
     setTheme,
     setLanguage,
     setSize,
+    setLayoutMode,
+    setColor,
   }
 })

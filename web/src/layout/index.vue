@@ -9,11 +9,18 @@
       />
     </transition>
 
-    <!-- 侧边栏 -->
-    <Sidebar />
+    <!-- 侧边栏模式：左侧固定侧边栏 -->
+    <Sidebar v-if="effectiveLayoutMode === 'sidebar'" />
+
+    <!-- 混合模式：侧边栏显示子菜单 -->
+    <Sidebar
+      v-else-if="effectiveLayoutMode === 'mixed'"
+      :mixed-mode="true"
+      :top-active-menu="topActiveMenu"
+    />
 
     <!-- 主内容区 -->
-    <div class="main-container">
+    <div class="main-container" :class="mainContainerClass">
       <!-- 顶部导航 -->
       <div class="fixed-header">
         <Navbar />
@@ -28,6 +35,7 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store/modules/app'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import Sidebar from './components/Sidebar.vue'
@@ -37,15 +45,37 @@ import AppMain from './components/AppMain.vue'
 
 defineOptions({ name: 'Layout' })
 
+const route = useRoute()
 const appStore = useAppStore()
-const { device, isMobile, isTablet } = useBreakpoint()
+const { device } = useBreakpoint()
+
+/** 有效的布局模式（移动端自动降级为侧边栏模式） */
+const effectiveLayoutMode = computed(() => {
+  if (appStore.device === 'mobile') return 'sidebar'
+  return appStore.layoutMode
+})
+
+/** 顶部一级菜单激活项（混合模式用） */
+const topActiveMenu = computed(() => {
+  const path = route.path
+  // 提取第一级路径作为顶部菜单激活项
+  const segments = path.split('/').filter(Boolean)
+  return segments.length > 0 ? `/${segments[0]}` : '/'
+})
 
 /** 容器样式类 */
 const containerClass = computed(() => ({
-  'sidebar-collapsed': !appStore.sidebar.opened,
+  'sidebar-collapsed': !appStore.sidebar.opened && (effectiveLayoutMode.value === 'sidebar' || effectiveLayoutMode.value === 'mixed'),
+  'layout-top': effectiveLayoutMode.value === 'top',
+  'layout-mixed': effectiveLayoutMode.value === 'mixed',
   'mobile': appStore.device === 'mobile',
   'tablet': appStore.device === 'tablet',
   'desktop': appStore.device === 'desktop',
+}))
+
+/** 主内容区样式类 */
+const mainContainerClass = computed(() => ({
+  'no-sidebar': effectiveLayoutMode.value === 'top',
 }))
 
 /** 监听设备类型变化，自动更新 appStore */
@@ -85,6 +115,11 @@ function handleCloseSidebar() {
   min-width: 0;
   transition: margin-left 0.3s;
   margin-left: var(--sidebar-width);
+}
+
+/* 顶部菜单模式：无侧边栏偏移 */
+.main-container.no-sidebar {
+  margin-left: 0;
 }
 
 .sidebar-collapsed .main-container {
