@@ -14,14 +14,15 @@
     >
       <el-form-item :label="t('menu.parentMenu')" prop="parentId">
         <el-tree-select
-          v-model="formData.parentId"
-          :data="menuTreeOptions"
-          :props="{ label: 'name', children: 'children' }"
-          :placeholder="t('menu.parentMenuPlaceholder')"
-          check-strictly
-          clearable
-          style="width: 100%"
-        />
+            v-model="formData.parentId"
+            :data="menuTreeOptions"
+            :props="{ label: 'name', children: 'children' }"
+            node-key="id"
+            :placeholder="t('menu.parentMenuPlaceholder')"
+            check-strictly
+            clearable
+            style="width: 100%"
+          />
       </el-form-item>
 
       <el-form-item :label="t('menu.type')" prop="type">

@@ -28,6 +28,7 @@ export default {
     passwordMismatch: 'The two passwords do not match',
     emailInvalid: 'Please enter a valid email address',
     selectRoles: 'Please select roles',
+    selectDept: 'Please select department',
     resetPasswordTip: 'Are you sure to reset the password of this user?',
     resetPasswordSuccess: 'Password reset successfully',
     enabled: 'Enabled',

@@ -28,6 +28,7 @@ export default {
     passwordMismatch: '两次输入的密码不一致',
     emailInvalid: '请输入正确的邮箱地址',
     selectRoles: '请选择角色',
+    selectDept: '请选择部门',
     resetPasswordTip: '确定要重置该用户的密码吗？',
     resetPasswordSuccess: '密码重置成功',
     enabled: '正常',

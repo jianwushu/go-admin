@@ -71,10 +71,14 @@
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('user.dept')" prop="deptId">
-            <el-input-number
+            <el-tree-select
               v-model="formData.deptId"
-              :min="0"
-              controls-position="right"
+              :data="deptTreeData"
+              :props="{ label: 'name', children: 'children' }"
+              :placeholder="t('user.selectDept')"
+              check-strictly
+              clearable
+              filterable
               style="width: 100%"
             />
           </el-form-item>
@@ -123,8 +127,8 @@
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { createUser, updateUser, getAllRoles } from '@/api/system'
-import type { UserItem, RoleInfo } from '@/types/api'
+import { createUser, updateUser, getAllRoles, getDeptTree } from '@/api/system'
+import type { UserItem, RoleInfo, DeptInfo } from '@/types/api'
 
 const props = defineProps<{
   visible: boolean
@@ -142,6 +146,7 @@ const { t } = useI18n()
 const formRef = ref<FormInstance>()
 const submitLoading = ref(false)
 const roleOptions = ref<RoleInfo[]>([])
+const deptTreeData = ref<DeptInfo[]>([])
 
 /** 表单数据 */
 const formData = reactive({
@@ -185,10 +190,21 @@ async function fetchRoleOptions() {
   }
 }
 
+/** 获取部门树 */
+async function fetchDeptTree() {
+  try {
+    const { data: res } = await getDeptTree()
+    deptTreeData.value = res.data || []
+  } catch {
+    // 错误已在 request 拦截器中处理
+  }
+}
+
 /** 监听弹窗打开，初始化表单 */
 watch(() => props.visible, (val) => {
   if (val) {
     fetchRoleOptions()
+    fetchDeptTree()
     if (props.isEdit && props.data) {
       // 编辑模式：填充数据
       formData.id = props.data.id
