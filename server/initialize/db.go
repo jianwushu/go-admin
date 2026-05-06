@@ -93,15 +93,12 @@ func migrateNewTables(db *gorm.DB) {
 		"job",
 		"job_log",
 		"system_config",
-		"announcement",
-		"message",
-		"message_user",
 	}
 	for _, t := range newTables {
 		fullName := fmt.Sprintf("%s%s", global.Config.TablePrefix, t)
 		if !db.Migrator().HasTable(fullName) {
 			global.Log.Info("发现新增表，开始创建", zap.String("table", fullName))
-			if err := executeSQLTemplate(db, "sql/sqlite/init.sql"); err != nil {
+			if err := executeSQLTemplate(db, "sql/init.sql"); err != nil {
 				global.Log.Error("增量建表失败", zap.String("table", fullName), zap.Error(err))
 			}
 			// 一次执行整个 init.sql 即可，CREATE TABLE IF NOT EXISTS 会跳过已存在的表

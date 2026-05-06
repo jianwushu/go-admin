@@ -55,6 +55,27 @@ export interface ServerMonitorInfo {
   redis: ServiceStatus
 }
 
+/** 在线用户信息 */
+export interface OnlineUser {
+  userId: number
+  username: string
+  nickname: string
+  deptName: string
+  ip: string
+  loginTime: number
+  onlineDuration: string
+}
+
+/** 获取在线用户列表 */
+export function getOnlineUsers(username?: string) {
+  return request.get<ApiResponse<OnlineUser[]>>('/monitor/online', { params: { username } })
+}
+
+/** 强制用户下线 */
+export function forceLogoutUser(userId: number) {
+  return request.delete<ApiResponse<null>>(`/monitor/online/${userId}`)
+}
+
 /** 获取服务器监控信息 */
 export function getServerMonitor() {
   return request.get<ApiResponse<ServerMonitorInfo>>('/monitor/server')

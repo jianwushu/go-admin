@@ -1,4 +1,4 @@
--- go-admin 建表脚本
+-- go-admin 建表脚本 (SQLite)
 -- 使用 Go text/template 渲染，变量 {{.TablePrefix}} 来自 config.yaml
 
 -- 用户表
@@ -159,3 +159,54 @@ CREATE TABLE IF NOT EXISTS {{.TablePrefix}}codegen_config (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_codegen_config_table_name ON {{.TablePrefix}}codegen_config(table_name);
 CREATE INDEX IF NOT EXISTS idx_codegen_config_deleted_at ON {{.TablePrefix}}codegen_config(deleted_at);
+
+-- ========== 第二阶段新增表 ==========
+
+-- 定时任务表
+CREATE TABLE IF NOT EXISTS {{.TablePrefix}}job (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(128) NOT NULL,
+    job_type INTEGER DEFAULT 1,
+    cron_expr VARCHAR(64) NOT NULL,
+    func_name VARCHAR(128),
+    http_url VARCHAR(512),
+    http_method VARCHAR(10) DEFAULT 'GET',
+    http_body TEXT,
+    status INTEGER DEFAULT 1,
+    remark VARCHAR(512),
+    created_by INTEGER DEFAULT 0,
+    updated_by INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    deleted_at DATETIME
+);
+CREATE INDEX IF NOT EXISTS idx_job_deleted_at ON {{.TablePrefix}}job(deleted_at);
+
+-- 定时任务执行日志表
+CREATE TABLE IF NOT EXISTS {{.TablePrefix}}job_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    job_id INTEGER NOT NULL,
+    job_name VARCHAR(128),
+    status INTEGER DEFAULT 1,
+    result TEXT,
+    error_msg TEXT,
+    duration INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_job_log_job_id ON {{.TablePrefix}}job_log(job_id);
+CREATE INDEX IF NOT EXISTS idx_job_log_created_at ON {{.TablePrefix}}job_log(created_at);
+
+-- 系统配置表
+CREATE TABLE IF NOT EXISTS {{.TablePrefix}}system_config (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    config_key VARCHAR(128) NOT NULL,
+    config_value TEXT,
+    config_type VARCHAR(32) DEFAULT 'text',
+    remark VARCHAR(512),
+    created_by INTEGER DEFAULT 0,
+    updated_by INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_system_config_key ON {{.TablePrefix}}system_config(config_key);
+

@@ -15,5 +15,7 @@ func InitMonitorRouter(r *gin.RouterGroup) {
 	monitorGroup.Use(middleware.Auth())
 	{
 		monitorGroup.GET("/server", monitorCtrl.GetServerInfo)
+		monitorGroup.GET("/online", monitorCtrl.GetOnlineUsers)
+		monitorGroup.DELETE("/online/:userId", monitorCtrl.ForceLogoutOnlineUser)
 	}
 }

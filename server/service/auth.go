@@ -25,6 +25,10 @@ const (
 	// 用户当前 Token 映射 Key: jwt:user:{userId} -> uuid
 	// 用于单设备登录，记录用户当前有效的 Token UUID
 	userTokenKeyPrefix = "jwt:user:"
+
+	// 用户登录时间 Key: jwt:login_time:{userId} -> unix_timestamp
+	// 用于记录用户登录时间，计算在线时长
+	loginTimeKeyPrefix = "jwt:login_time:"
 )
 
 // AuthService 认证服务
@@ -85,6 +89,13 @@ func (s *AuthService) Login(req request.LoginRequest) (*response.LoginResponse, 
 		return nil, errors.New("记录用户Token失败")
 	}
 
+	// 4. 记录用户登录时间: jwt:login_time:{userId} -> unix_timestamp
+	loginTimeKey := fmt.Sprintf("%s%d", loginTimeKeyPrefix, user.ID)
+	err = global.Redis.Set(ctx, loginTimeKey, time.Now().Unix(), time.Duration(jwtCfg.Refresh)*time.Second).Err()
+	if err != nil {
+		return nil, errors.New("记录登录时间失败")
+	}
+
 	return &response.LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
@@ -114,6 +125,10 @@ func (s *AuthService) Logout(accessToken string) error {
 
 	// 删除用户 Token 映射
 	global.Redis.Del(ctx, userTokenKey)
+
+	// 删除登录时间记录
+	loginTimeKey := fmt.Sprintf("%s%d", loginTimeKeyPrefix, claims.UserID)
+	global.Redis.Del(ctx, loginTimeKey)
 
 	return nil
 }
@@ -216,6 +231,10 @@ func (s *AuthService) ForceLogout(userID int64) error {
 
 	// 删除用户 Token 映射
 	global.Redis.Del(ctx, userTokenKey)
+
+	// 删除登录时间记录
+	loginTimeKey := fmt.Sprintf("%s%d", loginTimeKeyPrefix, userID)
+	global.Redis.Del(ctx, loginTimeKey)
 
 	return nil
 }

@@ -1,4 +1,4 @@
--- go-admin 初始数据脚本
+-- go-admin 初始数据脚本 (SQLite)
 -- 管理员密码：admin123（bcrypt 加密）
 
 -- 默认部门
@@ -54,41 +54,44 @@ INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path,
 INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (24, 22, '操作日志', 'menu.operationLog', 'operation-log', 'monitor/operation-log/index', 'form', 1, 2, 1, 1, '');
 INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (25, 22, '登录日志', 'menu.loginLog', 'login-log', 'monitor/login-log/index', 'logininfor', 1, 3, 1, 1, '');
 
+-- 在线用户（第二阶段新增）
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (28, 22, '在线用户', 'menu.onlineUser', 'online', 'monitor/online/index', 'online', 1, 4, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (29, 28, '在线用户查询', 'menu.onlineUserQuery', '', '', '', 2, 0, 1, 1, 'monitor:online:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (30, 28, '强制下线', 'menu.onlineUserForceLogout', '', '', '', 2, 0, 1, 1, 'monitor:online:forceLogout');
+
 -- 系统工具目录
 INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (26, 0, '系统工具', 'menu.tool', '/tool', '', 'tool', 0, 3, 1, 1, '');
 
 -- 代码生成菜单
 INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (27, 26, '代码生成', 'menu.codegen', 'codegen', 'tool/codegen/index', 'code', 1, 1, 1, 1, '');
 
--- 超级管理员角色拥有所有菜单权限
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 1);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 2);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 3);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 4);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 5);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 6);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 7);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 8);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 9);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 10);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 11);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 12);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 13);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 14);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 15);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 16);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 17);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 18);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 19);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 20);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 21);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 22);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 23);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 24);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 25);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 26);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_menu (role_id, menu_id) VALUES (1, 27);
+-- 定时任务（第二阶段新增）
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (31, 26, '定时任务', 'menu.job', 'job', 'tool/job/index', 'job', 1, 2, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (32, 31, '任务查询', 'menu.jobQuery', '', '', '', 2, 0, 1, 1, 'tool:job:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (33, 31, '任务新增', 'menu.jobAdd', '', '', '', 2, 0, 1, 1, 'tool:job:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (34, 31, '任务修改', 'menu.jobEdit', '', '', '', 2, 0, 1, 1, 'tool:job:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (35, 31, '任务删除', 'menu.jobDelete', '', '', '', 2, 0, 1, 1, 'tool:job:delete');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (36, 31, '任务日志', 'menu.jobLog', 'job-log', 'tool/job/log', 'log', 1, 3, 1, 1, '');
 
--- 超级管理员拥有所有部门权限
-INSERT OR IGNORE INTO {{.TablePrefix}}role_dept (role_id, dept_id) VALUES (1, 1);
-INSERT OR IGNORE INTO {{.TablePrefix}}role_dept (role_id, dept_id) VALUES (1, 2);
+-- 系统配置（第二阶段新增）
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (37, 1, '系统配置', 'menu.systemConfig', 'config', 'system/config/index', 'edit', 1, 5, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (38, 37, '配置查询', 'menu.configQuery', '', '', '', 2, 0, 1, 1, 'system:config:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (39, 37, '配置修改', 'menu.configEdit', '', '', '', 2, 0, 1, 1, 'system:config:edit');
+
+-- 系统公告（第二阶段新增）
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (40, 1, '系统公告', 'menu.announcement', 'announcement', 'system/announcement/index', 'message', 1, 6, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (41, 40, '公告查询', 'menu.announcementQuery', '', '', '', 2, 0, 1, 1, 'system:announcement:list');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (42, 40, '公告新增', 'menu.announcementAdd', '', '', '', 2, 0, 1, 1, 'system:announcement:add');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (43, 40, '公告修改', 'menu.announcementEdit', '', '', '', 2, 0, 1, 1, 'system:announcement:edit');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (44, 40, '公告删除', 'menu.announcementDelete', '', '', '', 2, 0, 1, 1, 'system:announcement:delete');
+
+-- 站内信（第二阶段新增）
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (45, 0, '站内信', 'menu.message', '/message', '', 'email', 0, 4, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (46, 45, '我的消息', 'menu.myMessage', 'inbox', 'message/inbox/index', 'message', 1, 1, 1, 1, '');
+INSERT OR IGNORE INTO {{.TablePrefix}}menu (id, parent_id, name, i18n_key, path, component, icon, type, sort, visible, status, perms) VALUES (47, 45, '发送消息', 'menu.sendMessage', 'send', 'message/send/index', 'edit', 1, 2, 1, 1, '');
+
+-- 系统配置初始数据
+INSERT OR IGNORE INTO {{.TablePrefix}}system_config (config_key, config_value, config_type, remark) VALUES ('system_title', 'Go-Admin', 'text', '系统标题');
+INSERT OR IGNORE INTO {{.TablePrefix}}system_config (config_key, config_value, config_type, remark) VALUES ('system_copyright', '© 2026 Go-Admin. All rights reserved.', 'text', '版权信息');
+INSERT OR IGNORE INTO {{.TablePrefix}}system_config (config_key, config_value, config_type, remark) VALUES ('system_logo', '', 'image', '系统Logo');
+INSERT OR IGNORE INTO {{.TablePrefix}}system_config (config_key, config_value, config_type, remark) VALUES ('system_favicon', '', 'image', 'Favicon');
