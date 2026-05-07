@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-admin/cron"
 	"go-admin/global"
 	"go-admin/initialize"
 
@@ -24,11 +25,16 @@ func main() {
 	global.Redis = initialize.Redis()
 	global.Log.Info("Redis 初始化完成")
 
-	// 5. 初始化路由
+	// 5. 初始化定时任务管理器
+	cron.Init()
+	cron.InitJobs()
+	global.Log.Info("定时任务管理器初始化完成")
+
+	// 6. 初始化路由
 	r := initialize.Router()
 	global.Log.Info("路由初始化完成")
 
-	// 6. 启动服务
+	// 7. 启动服务
 	addr := fmt.Sprintf(":%d", global.Config.Server.Port)
 	global.Log.Info("服务启动", zap.String("addr", addr))
 	if err := r.Run(addr); err != nil {

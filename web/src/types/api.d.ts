@@ -234,3 +234,60 @@ export interface SystemConfigBatchUpdateItem {
   id: number
   configValue: string
 }
+
+/** 定时任务 - 任务列表项 */
+export interface JobItem {
+  id: number
+  name: string
+  jobType: number
+  cronExpr: string
+  funcName: string
+  httpUrl: string
+  httpMethod: string
+  httpBody: string
+  status: number
+  remark: string
+  createdBy: number
+  updatedBy: number
+  createdAt: string
+  updatedAt: string
+}
+
+/** 定时任务 - 创建/更新请求 */
+export interface JobFormData {
+  id?: number
+  name: string
+  jobType: number
+  cronExpr: string
+  funcName: string
+  httpUrl: string
+  httpMethod: string
+  httpBody: string
+  status: number
+  remark: string
+}
+
+/** 定时任务 - 列表查询参数 */
+export interface JobListParams extends PageQuery {
+  name?: string
+  jobType?: number
+  status?: number
+}
+
+/** 定时任务日志 - 日志列表项 */
+export interface JobLogItem {
+  id: number
+  jobId: number
+  jobName: string
+  status: number
+  result: string
+  errorMsg: string
+  duration: number
+  createdAt: string
+}
+
+/** 定时任务日志 - 列表查询参数 */
+export interface JobLogListParams extends PageQuery {
+  jobId?: number
+  status?: number
+}

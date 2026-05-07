@@ -10,6 +10,7 @@ import loginLog from './modules/loginLog'
 import codegen from './modules/codegen'
 import profile from './modules/profile'
 import systemConfig from './modules/systemConfig'
+import job from './modules/job'
 
 export default {
   ...common,
@@ -24,4 +25,5 @@ export default {
   ...codegen,
   ...profile,
   ...systemConfig,
+  ...job,
 }

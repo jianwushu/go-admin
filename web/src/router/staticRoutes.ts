@@ -111,7 +111,7 @@ export const staticRoutes: RouteRecordRaw[] = [
           i18nKey: 'codegen.editConfig',
           hidden: true,
         },
-      },
+      }
     ],
   },
 ]
